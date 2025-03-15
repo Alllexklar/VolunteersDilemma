@@ -1,12 +1,13 @@
 from os import environ
 
-SESSION_CONFIGS = [
-    # dict(
-    #     name='public_goods',
-    #     app_sequence=['public_goods'],
-    #     num_demo_participants=3,
-    # ),
-]
+'''SESSION_CONFIGS = [
+    dict(
+        name='volunteersdilemma',
+        display_name="Questionnaire Experiment",
+        num_demo_participants=3,
+        app_sequence=['volunteersdilemma'],
+    ),
+]'''
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
 # in SESSION_CONFIGS, except those that explicitly override it.
