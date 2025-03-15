@@ -4,4 +4,8 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    outDir: '../dilemma1/static/', // Adjust the path as needed
+    emptyOutDir: true,
+  },
 })
