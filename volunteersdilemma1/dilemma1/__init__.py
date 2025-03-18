@@ -21,20 +21,23 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    pass
+    satisfaction = models.IntegerField(
+        label="How satisfied are you with the experiment?",
+        choices=[
+            [1, 'Strongly Disagree'],
+            [2, 'Disagree'],
+            [3, 'Neutral'],
+            [4, 'Agree'],
+            [5, 'Strongly Agree']
+        ],
+        widget=widgets.RadioSelectHorizontal
+    )
 
 
 # PAGES
-class MyPage(Page):
-    pass
+class test(Page):
+    form_model = 'player'
+    form_fields = ['satisfaction']
 
 
-class ResultsWaitPage(WaitPage):
-    pass
-
-
-class Results(Page):
-    pass
-
-
-page_sequence = [MyPage, ResultsWaitPage, Results]
+page_sequence = [test]
