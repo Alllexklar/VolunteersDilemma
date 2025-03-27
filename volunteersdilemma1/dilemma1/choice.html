@@ -1,0 +1,19 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Choice Page
+{% endblock %}
+
+{% block content %}
+    <h3>Please complete the survey below:</h3>
+    <form method="post">
+        <div class="form-group">
+            <label for="id_pet_choice">
+                {{ form.pet_choice.label }}
+            </label>
+            {{ form.pet_choice }}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock %}
