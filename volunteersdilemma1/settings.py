@@ -3,15 +3,10 @@ from os import environ
 
 
 SESSION_CONFIGS = [
-    # dict(
-    #     name='public_goods',
-    #     app_sequence=['public_goods'],
-    #     num_demo_participants=3,
-    # ),
     dict(
         name='dilemma1',
         display_name="Dilemma 1",
-        num_demo_participants=1,
+        num_demo_participants=178,
         app_sequence=['dilemma1'],
     ),
 ]
@@ -45,50 +40,3 @@ ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 DEMO_PAGE_INTRO_HTML = """ """
 
 SECRET_KEY = '7292570324700'
-
-
-ALLOWED_HOSTS = ['*']
-
-CSRF_TRUSTED_ORIGINS = ['*']
-
-CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_COOKIE_SECURE = False
-CSRF_COOKIE_HTTPONLY = False
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'volunteersdilemma1.debug_middleware.DebugCSRFMiddleware',
-]
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.csrf',
-            ],
-        },
-    },
-]
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'otree',
-]
