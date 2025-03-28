@@ -6,7 +6,7 @@ from .pages import Choice, Questionnaire1
 class PlayerBot(Bot):
     def play_round(self):
         # Optional delay to simulate sequential arrival (in seconds)
-        time.sleep(random.uniform(0.1, 0.2))
+        time.sleep(0.1)#random.uniform(0.1, 0.5))
         
         # Randomly choose 'cat' or 'dog'
         yield Choice, dict(pet_choice=random.choice(['cat', 'dog']))
