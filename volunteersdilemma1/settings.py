@@ -6,8 +6,16 @@ SESSION_CONFIGS = [
     dict(
         name='dilemma1',
         display_name="Dilemma 1",
-        num_demo_participants=178,
+        num_demo_participants=200,
         app_sequence=['dilemma1'],
+    ),
+        dict(
+        name='dilemma1_test1',
+        num_demo_participants=200,
+        app_sequence=['dilemma1'],
+        config=dict(
+            case='cat_minority',
+        )
     ),
 ]
 
