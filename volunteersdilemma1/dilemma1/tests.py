@@ -3,7 +3,7 @@ import time
 from otree.api import Bot
 from .pages import Choice, Questionnaire1
 
-class PlayerBot(Bot):
+class PlayerBot2(Bot):
     def play_round(self):
         # Optional delay to simulate sequential arrival (in seconds)
         time.sleep(0.1)#random.uniform(0.1, 0.5))
@@ -20,7 +20,7 @@ class PlayerBot(Bot):
         yield Choice, dict(pet_choice=random.choices(['cat', 'dog'], weights=[0.3, 0.7])[0])
 
 
-class PlayerBot(Bot):
+class PlayerBot3(Bot):
     _counter = 0  # class-level variable
 
     def play_round(self):

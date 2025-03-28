@@ -51,11 +51,13 @@ def validate_bot_data():
     num_cat_minority = sum(1 for group_name, _ in groups if group_name.startswith('cat_minority'))
     num_control = sum(1 for group_name, _ in groups if group_name.startswith('control'))
 
+    print("")
     print(f"Total number of players: {df.shape[0]}")
     print(f"Total number of groups: {len(groups)}")
     print(f"Number dog minority groups: {num_dog_minority}")
     print(f"Number cat minority groups: {num_cat_minority}")
     print(f"Number control groups: {num_control}")
+    print("")
 
     success = True
 
@@ -83,6 +85,8 @@ def validate_bot_data():
                 print(f"{group_name}: Not 1 cat / 2 dogs.")
                 success = False
 
+        
+    print("")
     if success:
         print("All checks passed.")
     else:
