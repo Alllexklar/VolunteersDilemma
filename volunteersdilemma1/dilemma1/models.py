@@ -159,23 +159,11 @@ class Subsession(BaseSubsession):
 
 
 
-
-
-
-    
-
-
-
-
-
-
-
 class Group(BaseGroup):
     pass
 
 
 class Player(BasePlayer):
-    
     pet_choice = models.CharField(
         label="Select a pet",
         choices=[
@@ -186,6 +174,21 @@ class Player(BasePlayer):
     )
     group_assignment = models.StringField(blank=True)
     my_group_id = models.IntegerField(blank=True, null=True)
+
+
+    # Volunteer's dilemma
+    volunteered = models.IntegerField(
+        label="Do you volunteer",
+        choices=[
+            [1, 'Yes'],
+            [0, 'No']
+        ],
+        widget=widgets.RadioSelect
+    )
+
+
+
+
     satisfaction = models.IntegerField(
             label="How satisfied are you with the experiment?",
             choices=[

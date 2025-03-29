@@ -1,0 +1,23 @@
+{% extends "global/Page.html" %}
+{% load static %}  <!-- This is crucial for using {% static '...' %} -->
+
+{% block title %}
+    My Custom Page
+{% endblock %}
+
+{% block content %}
+    <h1>Welcome to My Custom Page!</h1>
+    <p>This page has custom CSS and images.</p>
+
+    <!-- Example image references -->
+    <img src="{% static 'dilemma1/images/image1.png' %}" alt="First Image" />
+    <img src="{% static 'dilemma1/images/image2.png' %}" alt="Second Image" />
+{% endblock %}
+
+{% block otree_content %}
+    <!-- By default, oTree includes a form for the Next button, etc. -->
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'dilemma1/style.css' %}">
+{% endblock %}
