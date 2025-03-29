@@ -9,18 +9,6 @@ SESSION_CONFIGS = [
         num_demo_participants=200,
         app_sequence=['dilemma1'],
     ),
-        dict(
-        name='dilemma1_test1',
-        display_name="Dilemma 1 Test 1",
-        num_demo_participants=200,
-        app_sequence=['dilemma1'],
-    ),
-        dict(
-        name='dilemma1_test2',
-        display_name="Dilemma 1 Test 2",
-        num_demo_participants=200,
-        app_sequence=['dilemma1'],
-    ),
 ]
 
 
