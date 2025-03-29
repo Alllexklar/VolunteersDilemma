@@ -31,4 +31,4 @@ class Volunteering(Page):
 
 
 
-page_sequence = [AnimalChoice, MywaitingPage, Questionnaire1]
+page_sequence = [Volunteering, AnimalChoice, MywaitingPage, Questionnaire1]

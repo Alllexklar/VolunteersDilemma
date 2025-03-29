@@ -1,5 +1,5 @@
 {% extends "global/Page.html" %}
-{% load static %}  <!-- This is crucial for using {% static '...' %} -->
+{% load static %}
 
 {% block title %}
     My Custom Page
@@ -10,8 +10,22 @@
     <p>This page has custom CSS and images.</p>
 
     <!-- Example image references -->
-    <img src="{% static 'dilemma1/images/image1.png' %}" alt="First Image" />
-    <img src="{% static 'dilemma1/images/image2.png' %}" alt="Second Image" />
+    <div class="image-container">
+        <div class="top-image-container">
+            <img src="{% static 'dilemma1/images/dog.png' %}" alt="Second Image" />
+            <div class="line1"></div>
+            <img src="{% static 'dilemma1/images/dog.png' %}" alt="Third Image" />
+        </div>
+        <div class="bottom-image-container">
+            <div class="line2"></div>
+            <div class="cat-wrapper">
+                <button class="btn btn-primary volunteer-button">Volunteer</button>
+                <img src="{% static 'dilemma1/images/cat.png' %}" alt="First Image" />
+            </div>
+            <div class="line3"></div>
+        </div>
+    </div>
+    
 {% endblock %}
 
 {% block otree_content %}
