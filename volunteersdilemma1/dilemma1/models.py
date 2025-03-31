@@ -186,6 +186,8 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect
     )
 
+    bonus = models.IntegerField(initial=0, blank=True, null=True)
+
 
 
 

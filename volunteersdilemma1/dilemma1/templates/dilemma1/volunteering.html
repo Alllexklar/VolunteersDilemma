@@ -19,7 +19,22 @@
         <div class="bottom-image-container">
             <div class="line2"></div>
             <div class="cat-wrapper">
-                <button class="btn btn-primary volunteer-button">Volunteer</button>
+                <button 
+                    class="btn btn-primary volunteer-button" 
+                    name="volunteered"
+                    value="1"
+                    type="submit"
+                >
+                    Volunteer
+                </button>
+                <button 
+                    class="btn btn-primary skip-button" 
+                    name="volunteered"
+                    value="0"
+                    type="submit"
+                >
+                    Skip
+                </button>
                 <img src="{% static 'dilemma1/images/cat.png' %}" alt="First Image" />
             </div>
             <div class="line3"></div>

@@ -47,17 +47,29 @@ def validate_bot_data():
     groups = df.groupby('player.group_assignment')
 
     # Instead of groups.filter(...), just count groups by name.
-    num_dog_minority = sum(1 for group_name, _ in groups if group_name.startswith('dog_minority'))
+    dog_minority_groups = [
+        (name, g_df)
+        for name, g_df in groups
+        if name.startswith('dog_minority')
+    ]
+    num_dog_minority = len(dog_minority_groups)
     num_dog_minority_complete = sum(
-        g['player.pet_choice'].value_counts().get('dog', 0) == 1 
-        and g['player.pet_choice'].value_counts().get('cat', 0) == 2
-        for _, g in groups
+        group_df['player.pet_choice'].value_counts().get('dog', 0) == 1
+        and group_df['player.pet_choice'].value_counts().get('cat', 0) == 2
+        for _, group_df in dog_minority_groups
     )
-    num_cat_minority = sum(1 for group_name, _ in groups if group_name.startswith('cat_minority'))
+
+
+    cat_minority_groups = [
+        (name, g_df)
+        for name, g_df in groups
+        if name.startswith('cat_minority')
+    ]
+    num_cat_minority = len(cat_minority_groups)
     num_cat_minority_complete = sum(
-        g['player.pet_choice'].value_counts().get('cat', 0) == 1 
-        and g['player.pet_choice'].value_counts().get('dog', 0) == 2
-        for _, g in groups
+        group_df['player.pet_choice'].value_counts().get('cat', 0) == 1
+        and group_df['player.pet_choice'].value_counts().get('dog', 0) == 2
+        for _, group_df in cat_minority_groups
     )
     num_control = sum(1 for group_name, _ in groups if group_name.startswith('control'))
 

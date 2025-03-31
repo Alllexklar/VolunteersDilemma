@@ -23,12 +23,28 @@ class MywaitingPage(Page):
 
         elapsed = time.time() - start_time
         if elapsed < 3:
-            time.sleep(2 - elapsed)
+            #time.sleep(2 - elapsed)
+            pass
 
 class Volunteering(Page):
     form_model = 'player'
     form_fields = ['volunteered']
 
+    def before_next_page(self):
+        bonus = False
+
+        matching_players = [p for p in self.group.get_players() if p.group_assigned == self.player.group_assigned]
+        for p in matching_players:
+            if p.volunteered == 1:
+                bonus = True
+                break
+        
+        if bonus:
+            for p in matching_players:
+                p.bonus = 1
+        else:
+            for p in matching_players:
+                p.bonus = 0
 
 
-page_sequence = [Volunteering, AnimalChoice, MywaitingPage, Questionnaire1]
+page_sequence = [AnimalChoice , MywaitingPage, Volunteering, Questionnaire1]
