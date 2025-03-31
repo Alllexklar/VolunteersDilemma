@@ -13,7 +13,7 @@ class PlayerBot(Bot):
 
         yield Submission(MywaitingPage, {}, check_html=False)
 
-        yield Volunteering, dict(volunteered=random.randint(0, 1))
+        yield Volunteering, dict(volunteered=random.choices([0, 1], weights=[0.6, 0.4])[0])
 
         yield Questionnaire1, dict(satisfaction=random.randint(1, 5))
 

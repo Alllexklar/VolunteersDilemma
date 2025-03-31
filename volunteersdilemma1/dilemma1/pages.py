@@ -31,20 +31,22 @@ class Volunteering(Page):
     form_fields = ['volunteered']
 
     def before_next_page(self):
-        bonus = False
+        matching_players = [
+            p for p in self.group.get_players()
+            if p.group_assignment == self.player.group_assignment
+        ]
 
-        matching_players = [p for p in self.group.get_players() if p.group_assigned == self.player.group_assigned]
+        # Check if any matching player already has bonus==1.
+        if any(p.field_maybe_none('bonus') == 1.5 for p in matching_players):
+            self.player.bonus = 1.5
+            return
+
+        # Determine bonus based on whether any matching player's volunteered field equals 1.
+        bonus_value = 1.5 if any(p.field_maybe_none('volunteered') == 1 for p in matching_players) else 0
+
+        # Set bonus for all matching players.
         for p in matching_players:
-            if p.volunteered == 1:
-                bonus = True
-                break
-        
-        if bonus:
-            for p in matching_players:
-                p.bonus = 1
-        else:
-            for p in matching_players:
-                p.bonus = 0
+            p.bonus = bonus_value
 
 
 page_sequence = [AnimalChoice , MywaitingPage, Volunteering, Questionnaire1]
