@@ -4,10 +4,15 @@
 {% block title %}ReCAPTCHA Test{% endblock %}
 
 {% block content %}
-    <form method="post">
-        <!-- Google reCAPTCHA widget -->
-        <div class="g-recaptcha" data-sitekey="6Lf_kAUrAAAAAPWkMxECy81L4jcW-PmOs6YUqWTO"></div>
-        <button type="submit">Submit</button>
-    </form>
-    <script src="https://www.google.com/recaptcha/enterprise.js?render=6Lf_kAUrAAAAAPWkMxECy81L4jcW-PmOs6YUqWTO" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js"
+  async defer></script>
+
+
+  <form action="?" method="POST">
+    <div id="recaptcha-widget" class="g-recaptcha" data-sitekey="6LdMPwYrAAAAALl1p7jtmAq0vWU2tMSZg9BFtzW1"></div>
+    <br/>
+    <input type="submit" value="Submit">
+</form>
+
+
 {% endblock %}

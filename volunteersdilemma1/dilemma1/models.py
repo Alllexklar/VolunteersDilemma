@@ -14,7 +14,6 @@ class C(BaseConstants):
 class Subsession(BaseSubsession):
 
     def assign_individual_group(self, player):
-        print("dsfjsdkfdjfkaljkfjalkdjfkajsklfjsalkjdfk")
         """
         Assigns an individual player to a group based on their pet choice.
         
@@ -186,11 +185,6 @@ class Player(BasePlayer):
         ],
         widget=widgets.RadioSelect
     )
-
-    bonus = models.FloatField(initial=0, blank=True, null=True)
-
-
-
 
     satisfaction = models.IntegerField(
             label="How satisfied are you with the experiment?",

@@ -23,7 +23,7 @@ class MywaitingPage(Page):
 
         elapsed = time.time() - start_time
         if elapsed < 3:
-            time.sleep(2 - elapsed)
+            pass #time.sleep(2 - elapsed)
             
 
 class Volunteering(Page):
@@ -37,19 +37,19 @@ class Volunteering(Page):
         ]
 
         # Check if any matching player already has bonus==1.
-        if any(p.field_maybe_none('bonus') == 1.5 for p in matching_players):
-            self.player.bonus = 1.5
+        if any(p.field_maybe_none('payoff') == 1 for p in matching_players):
+            self.player.payoff = 1
             return
 
         # Determine bonus based on whether any matching player's volunteered field equals 1.
-        bonus_value = 1.5 if any(p.field_maybe_none('volunteered') == 1 for p in matching_players) else 0
+        bonus_payout = 1 if any(p.field_maybe_none('volunteered') == 1 for p in matching_players) else 0
 
         # Set bonus for all matching players.
         for p in matching_players:
-            p.bonus = bonus_value
+            p.payoff = bonus_payout
 
 class Task(Page):
     pass
 
 
-page_sequence = [Task, AnimalChoice, MywaitingPage, Volunteering, Questionnaire1]
+page_sequence = [AnimalChoice, MywaitingPage, Volunteering, Task, Questionnaire1]
