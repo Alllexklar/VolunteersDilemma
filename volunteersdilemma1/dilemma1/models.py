@@ -14,6 +14,7 @@ class C(BaseConstants):
 class Subsession(BaseSubsession):
 
     def assign_individual_group(self, player):
+        print("dsfjsdkfdjfkaljkfjalkdjfkajsklfjsalkjdfk")
         """
         Assigns an individual player to a group based on their pet choice.
         

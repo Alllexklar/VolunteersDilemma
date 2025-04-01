@@ -1,0 +1,13 @@
+{% extends "global/Page.html" %}
+{% load static %}
+
+{% block title %}ReCAPTCHA Test{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <!-- Google reCAPTCHA widget -->
+        <div class="g-recaptcha" data-sitekey="6Lf_kAUrAAAAAPWkMxECy81L4jcW-PmOs6YUqWTO"></div>
+        <button type="submit">Submit</button>
+    </form>
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6Lf_kAUrAAAAAPWkMxECy81L4jcW-PmOs6YUqWTO" async defer></script>
+{% endblock %}
