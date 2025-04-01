@@ -1,6 +1,6 @@
 /base  
  python -m venv .venv
-./.venv/Scripts/activate
+ ./.venv/Scripts/activate
 
 Set python interpreter to /.venv/Scripts/python.exe
 
