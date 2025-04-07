@@ -1,6 +1,8 @@
 from otree.api import *
 from .models import Player  # import models if needed by the view
 import time
+import requests
+from otree.settings import RECAPTCHA_SECRET_KEY, RECAPTCHA_SITE_KEY
 
 
 class Questionnaire1(Page):
@@ -48,8 +50,28 @@ class Volunteering(Page):
         for p in matching_players:
             p.payoff = bonus_payout
 
+
+def recaptcha_valid(response_token):
+    res = requests.post("https://www.google.com/recaptcha/api/siteverify", data={
+        'secret': RECAPTCHA_SECRET_KEY,
+        'response': response_token
+    })
+    return res.json()["success"]
+
 class Task(Page):
-    pass
+    def vars_for_template(player: Player):
+        return {
+            "RECAPTCHA_SITE_KEY": RECAPTCHA_SITE_KEY
+        }
+
+    def live_method(player: Player, data):
+        if recaptcha_valid(data["response_token"]):
+            player.is_human = True
+
+    """@staticmethod
+    def error_message(player, values):
+        if not player.is_human:
+            return 'You did not solve the captcha.'"""
 
 
 page_sequence = [AnimalChoice, MywaitingPage, Volunteering, Task, Questionnaire1]

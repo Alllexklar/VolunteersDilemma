@@ -197,3 +197,5 @@ class Player(BasePlayer):
             ],
             widget=widgets.RadioSelectHorizontal
         )
+    
+    is_human = models.BooleanField(initial=False)
