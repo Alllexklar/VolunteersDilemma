@@ -12,9 +12,9 @@
     <!-- Example image references -->
     <div class="image-container">
         <div class="top-image-container">
-            <img src="{% static 'dilemma1/images/dog.png' %}" alt="Second Image" />
+            <img src="{% static player_a_img_src %}" alt="Player A Image" />
             <div class="line1"></div>
-            <img src="{% static 'dilemma1/images/dog.png' %}" alt="Third Image" />
+            <img src="{% static player_b_img_src %}" alt="Player B Image" />
         </div>
         <div class="bottom-image-container">
             <div class="line2"></div>
@@ -35,7 +35,7 @@
                 >
                     Skip
                 </button>
-                <img src="{% static 'dilemma1/images/cat.png' %}" alt="First Image" />
+                <img src="{% static self_image_src %}" alt="Self Image" />
             </div>
             <div class="line3"></div>
         </div>

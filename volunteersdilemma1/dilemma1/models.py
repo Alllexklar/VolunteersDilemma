@@ -174,6 +174,10 @@ class Player(BasePlayer):
     )
     group_assignment = models.StringField(blank=True)
     my_group_id = models.IntegerField(blank=True, null=True)
+    
+    
+    # if image of same group member in majority is "left" or "right", for minority "none"
+    img_position = models.StringField(blank=True)
 
 
     # Volunteer's dilemma
