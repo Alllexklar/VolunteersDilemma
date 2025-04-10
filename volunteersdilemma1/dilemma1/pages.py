@@ -25,7 +25,7 @@ class MywaitingPage(Page):
 
         elapsed = time.time() - start_time
         if elapsed < 3:
-            pass #time.sleep(2 - elapsed)
+            time.sleep(2 - elapsed)
             
 
 class Volunteering(Page):
@@ -79,4 +79,4 @@ class Volunteering(Page):
             p.payoff = bonus_payout
 
 
-page_sequence = [AnimalChoice, MywaitingPage, Volunteering, Questionnaire1]
+page_sequence = [AnimalChoice, MywaitingPage]#, Volunteering, Questionnaire1]

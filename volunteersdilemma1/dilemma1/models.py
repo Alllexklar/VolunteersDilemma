@@ -75,7 +75,7 @@ class Subsession(BaseSubsession):
         lock_key = f"dilemma1:{self.session.code}:grouping_lock"
 
         # Use Redis lock to ensure that this block is executed exclusively.
-        with redis_client.lock(lock_key, timeout=5, blocking=True):
+        with redis_client.lock(lock_key, timeout=20, blocking=True):
             # Get the current grouping data from Redis (stored as JSON).
             data_str = redis_client.get(grouping_key)
             if not data_str:
