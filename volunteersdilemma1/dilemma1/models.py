@@ -1,15 +1,49 @@
-from otree.api import *
+from django.db import transaction
+from django.apps import apps
+import django.db.models as django_models
+from django.db.models import F
+from otree.api import BaseConstants, BaseSubsession, BaseGroup, BasePlayer, widgets, models, ExtraModel
+import os
+import redis
+import json
+import fakeredis
+from dotenv import load_dotenv
+load_dotenv()
 
 
 doc = """
 Your app description
 """
 
+USE_FAKEREDIS = os.environ.get('USE_FAKEREDIS', 'false').lower() == 'true'
+
+if USE_FAKEREDIS:
+    import fakeredis
+    print("Using FakeRedis for testing.")
+    redis_client = fakeredis.FakeStrictRedis()
+    
+    # Monkey-patch the release function used in Lock.
+    def fake_do_release(self, expected_token):
+        self.redis.delete(self.name)
+        return True
+    redis.lock.Lock.do_release = fake_do_release
+
+else:
+    redis_url = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
+    print(f"Connecting to Redis at {redis_url}")
+    try:
+        redis_client = redis.from_url(redis_url)
+    except redis.ConnectionError as e:
+        print(f"Failed to connect to Redis: {e}")
+        redis_client = None
 
 class C(BaseConstants):
     NAME_IN_URL = 'dilemma1'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
+
+
+
 
 class Subsession(BaseSubsession):
 
@@ -18,7 +52,7 @@ class Subsession(BaseSubsession):
         Assigns an individual player to a group based on their pet choice.
         
         For players who have made a pet choice:
-          • Increment the counter for that pet type.
+          • Increments the counter for that pet type.
           • If the count is <= 75, assign using the pet-choice rule:
               - For a cat player: if (cat_count mod 3 == 1) then 'cat_minority'
                 (i.e. the lone cat) else 'dog_minority' (i.e. majority cat).
@@ -26,142 +60,146 @@ class Subsession(BaseSubsession):
                 else 'cat_minority'.
           • If the count > 75 for that pet type, assign to the control condition.
           
-        Then the function places the player into an (incomplete) group stored in session.vars.
-        These incomplete groups allow the participant to continue even if their group is not yet complete.
-
-        Additionally, each group (across all conditions) has a global 'my_group_id' 
-        so that you can have a unique integer group index across the entire study.
-
-        We also add a safety check so that if the group is 'cat_minority' or 'dog_minority',
-        we do not add more than one minority pet to that group.
+        Then the function assigns the player into an (incomplete) group. Each
+        group (across all conditions) has a global 'my_group_id' so that you can
+        have a unique integer group index across the study.
+        
+        A safety check prevents adding more than one minority pet to a minority group.
+        
+        The grouping data (counters, lists of groups, and ID trackers) are stored
+        in Redis and updated atomically within a Redis lock.
         """
 
-        # 1. Initialize grouping storage if needed.
-        if 'grouping' not in self.session.vars:
-            self.session.vars['grouping'] = {
-                'cat_minority': [],   # Each item is a dict: {'group_id': int, 'my_group_id': int, 'condition': str, 'cat_count': int, 'dog_count': int, 'players': [...]}
-                'dog_minority': [],
-                'control': []
-            }
-            self.session.vars['cat_count'] = 0
-            self.session.vars['dog_count'] = 0
-            self.session.vars['control_count'] = 0
+        # Compose unique Redis keys for grouping data and locking, based on session.pk.
+        grouping_key = f"dilemma1:{self.session.code}:grouping_data"
+        lock_key = f"dilemma1:{self.session.code}:grouping_lock"
 
-            # Trackers for condition-specific group IDs
-            self.session.vars['next_cat_minority_group'] = 1
-            self.session.vars['next_dog_minority_group'] = 1
-            self.session.vars['next_control_group'] = 1
-
-            # Global tracker for an overall unique group ID across all conditions
-            self.session.vars['next_global_group_id'] = 1
-
-        # 2. Determine the condition based on pet_choice and the counters.
-        if player.pet_choice == 'cat':
-            self.session.vars['cat_count'] += 1
-            count = self.session.vars['cat_count']
-            if count <= 75:
-                # For cat players in pet-choice phase:
-                # Every first cat in a block of 3 => cat_minority; otherwise dog_minority.
-                condition = 'cat_minority' if (count % 3 == 1) else 'dog_minority'
+        # Use Redis lock to ensure that this block is executed exclusively.
+        with redis_client.lock(lock_key, timeout=5, blocking=True):
+            # Get the current grouping data from Redis (stored as JSON).
+            data_str = redis_client.get(grouping_key)
+            if not data_str:
+                # Initialize grouping data if it doesn't already exist.
+                data = {
+                    'grouping': {
+                        'cat_minority': [],   # Each group is a dict: 
+                        # {'group_id': int, 'my_group_id': int, 'condition': str,
+                        #  'cat_count': int, 'dog_count': int, 'players': [...]}
+                        'dog_minority': [],
+                        'control': []
+                    },
+                    'cat_count': 0,
+                    'dog_count': 0,
+                    'control_count': 0,
+                    # Trackers for condition-specific group IDs
+                    'next_cat_minority_group': 1,
+                    'next_dog_minority_group': 1,
+                    'next_control_group': 1,
+                    # Global tracker for overall unique group ID
+                    'next_global_group_id': 1
+                }
             else:
+                data = json.loads(data_str)
+
+            # Determine the condition based on pet_choice and update counters.
+            if player.pet_choice == 'cat':
+                data['cat_count'] += 1
+                count = data['cat_count']
+                if count <= 75:
+                    # For cat players in pet-choice phase:
+                    # Every first cat in a block of 3 => cat_minority; otherwise dog_minority.
+                    condition = 'cat_minority' if (count % 3 == 1) else 'dog_minority'
+                else:
+                    condition = 'control'
+            elif player.pet_choice == 'dog':
+                data['dog_count'] += 1
+                count = data['dog_count']
+                if count <= 75:
+                    # For dog players in pet-choice phase:
+                    # Every first dog in a block of 3 => dog_minority; otherwise cat_minority.
+                    condition = 'dog_minority' if (count % 3 == 1) else 'cat_minority'
+                else:
+                    condition = 'control'
+            else:
+                # Fallback if pet_choice is missing (assign to control).
                 condition = 'control'
 
-        elif player.pet_choice == 'dog':
-            self.session.vars['dog_count'] += 1
-            count = self.session.vars['dog_count']
-            if count <= 75:
-                # For dog players in pet-choice phase:
-                # Every first dog in a block of 3 => dog_minority; otherwise cat_minority.
-                condition = 'dog_minority' if (count % 3 == 1) else 'cat_minority'
-            else:
-                condition = 'control'
-        else:
-            # Fallback if pet_choice is missing (assign to control).
-            condition = 'control'
+            # Attempt to assign the player to an existing incomplete group for that condition.
+            groups = data['grouping'][condition]
+            assigned = False
 
-        # 3. Attempt to assign the player to an existing incomplete group for that condition.
-        groups = self.session.vars['grouping'][condition]
-        assigned = False
+            for group in groups:
+                if len(group['players']) < 3:
+                    if group['condition'] == 'cat_minority':
+                        # For a 'cat_minority' group:
+                        if player.pet_choice == 'cat':
+                            if group['cat_count'] >= 1:
+                                continue
+                        else:  # player.pet_choice == 'dog'
+                            if group['dog_count'] >= 2:
+                                continue
+                    elif group['condition'] == 'dog_minority':
+                        # For a 'dog_minority' group:
+                        if player.pet_choice == 'dog':
+                            if group['dog_count'] >= 1:
+                                continue
+                        else:  # player.pet_choice == 'cat'
+                            if group['cat_count'] >= 2:
+                                continue
 
-        for group in groups:
-            if len(group['players']) < 3:
-
-                if group['condition'] == 'cat_minority':
-                    # If new player is a cat (the minority), ensure we don't already have a cat
+                    # If the checks pass, add the player.
+                    group['players'].append(player.id_in_subsession)
                     if player.pet_choice == 'cat':
-                        if group['cat_count'] >= 1:
-                            continue
-                    # If new player is a dog (the majority), ensure we don't exceed 2 dogs
-                    else:  # player.pet_choice == 'dog'
-                        if group['dog_count'] >= 2:
-                            continue
+                        group['cat_count'] += 1
+                    elif player.pet_choice == 'dog':
+                        group['dog_count'] += 1
 
-                elif group['condition'] == 'dog_minority':
-                    # If new player is a dog (the minority), ensure we don't already have a dog
-                    if player.pet_choice == 'dog':
-                        if group['dog_count'] >= 1:
-                            continue
-                    # If new player is a cat (the majority), ensure we don't exceed 2 cats
-                    else:  # player.pet_choice == 'cat'
-                        if group['cat_count'] >= 2:
-                            continue
+                    # Assign player's group identifiers.
+                    player.group_assignment = f"{condition}_{group['group_id']}"
+                    player.my_group_id = group['my_group_id']
+                    assigned = True
+                    break
 
-                # If checks are passed, we can add the player
-                group['players'].append(player.id_in_subsession)
+            # If no incomplete group was found, create a new one.
+            if not assigned:
+                if condition == 'cat_minority':
+                    group_id = data['next_cat_minority_group']
+                    data['next_cat_minority_group'] += 1
+                elif condition == 'dog_minority':
+                    group_id = data['next_dog_minority_group']
+                    data['next_dog_minority_group'] += 1
+                else:  # 'control'
+                    group_id = data['next_control_group']
+                    data['next_control_group'] += 1
 
-                # Update cat/dog counts in this group
-                if player.pet_choice == 'cat':
-                    group['cat_count'] += 1
-                elif player.pet_choice == 'dog':
-                    group['dog_count'] += 1
+                # Allocate a global group ID.
+                my_group_id = data['next_global_group_id']
+                data['next_global_group_id'] += 1
 
-                # 3a. Set the player's condition-specific and global group info
-                player.group_assignment = f"{condition}_{group['group_id']}"
-                player.my_group_id = group['my_group_id']  # use the existing group's global ID
+                # Initialize counts for the new group.
+                cat_in_new_group = 1 if player.pet_choice == 'cat' else 0
+                dog_in_new_group = 1 if player.pet_choice == 'dog' else 0
 
-                assigned = True
-                break
+                new_group = {
+                    'group_id': group_id,
+                    'my_group_id': my_group_id,
+                    'condition': condition,
+                    'cat_count': cat_in_new_group,
+                    'dog_count': dog_in_new_group,
+                    'players': [player.id_in_subsession]
+                }
+                groups.append(new_group)
 
-        # 4. If no incomplete group was found, create a new one.
-        if not assigned:
-            # Identify the next condition-specific group ID
-            if condition == 'cat_minority':
-                group_id = self.session.vars['next_cat_minority_group']
-                self.session.vars['next_cat_minority_group'] += 1
-            elif condition == 'dog_minority':
-                group_id = self.session.vars['next_dog_minority_group']
-                self.session.vars['next_dog_minority_group'] += 1
-            else:  # 'control'
-                group_id = self.session.vars['next_control_group']
-                self.session.vars['next_control_group'] += 1
+                # Set player's group info.
+                player.group_assignment = f"{condition}_{group_id}"
+                player.my_group_id = my_group_id
 
-            # Grab the *global* group ID, increment it for the next new group
-            my_group_id = self.session.vars['next_global_group_id']
-            self.session.vars['next_global_group_id'] += 1
-
-            # Initialize cat_count/dog_count for the new group
-            cat_in_new_group = 1 if player.pet_choice == 'cat' else 0
-            dog_in_new_group = 1 if player.pet_choice == 'dog' else 0
-
-            new_group = {
-                'group_id': group_id,
-                'my_group_id': my_group_id,
-                'condition': condition,
-                'cat_count': cat_in_new_group,
-                'dog_count': dog_in_new_group,
-                'players': [player.id_in_subsession]
-            }
-            groups.append(new_group)
-
-            # 4a. Assign the player's group fields
-            player.group_assignment = f"{condition}_{group_id}"
-            player.my_group_id = my_group_id
-
+            # Save the updated grouping data back into Redis.
+            redis_client.set(grouping_key, json.dumps(data))
 
 
 class Group(BaseGroup):
     pass
-
 
 class Player(BasePlayer):
     pet_choice = models.CharField(
@@ -189,7 +227,6 @@ class Player(BasePlayer):
         ],
         widget=widgets.RadioSelect
     )
-
     satisfaction = models.IntegerField(
             label="How satisfied are you with the experiment?",
             choices=[
@@ -201,5 +238,3 @@ class Player(BasePlayer):
             ],
             widget=widgets.RadioSelectHorizontal
         )
-    
-    is_human = models.BooleanField(initial=False)

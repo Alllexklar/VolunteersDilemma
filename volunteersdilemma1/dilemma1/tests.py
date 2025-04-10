@@ -1,7 +1,7 @@
 import random
 import time
 from otree.api import Bot, Submission
-from .pages import AnimalChoice, Questionnaire1, MywaitingPage, Volunteering, Task
+from .pages import AnimalChoice, Questionnaire1, MywaitingPage, Volunteering
 
 class PlayerBot(Bot):
     def play_round(self):
@@ -14,8 +14,6 @@ class PlayerBot(Bot):
         yield Submission(MywaitingPage, {}, check_html=False)
 
         yield Volunteering, dict(volunteered=random.choices([0, 1], weights=[0.6, 0.4])[0])
-
-        yield Submission(Task, {}, check_html=False)
 
         yield Questionnaire1, dict(satisfaction=random.randint(1, 5))
 

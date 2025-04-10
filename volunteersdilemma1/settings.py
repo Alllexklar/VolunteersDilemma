@@ -1,5 +1,9 @@
+import os
 from os import environ
+from dotenv import load_dotenv
 
+load_dotenv()
+print("DJANGO_SETTINGS_MODULE:", os.environ.get('DJANGO_SETTINGS_MODULE'))
 
 
 SESSION_CONFIGS = [
@@ -41,9 +45,28 @@ DEMO_PAGE_INTRO_HTML = """ """
 
 SECRET_KEY = '7292570324700'
 
-DEBUG = False
+DEBUG = environ.get('DEBUG', 'false').lower() == 'true'
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# RECAPTCHA V2
-RECAPTCHA_SITE_KEY = "6LdQcA0rAAAAAEwT6ttl7FcIG58dz6dQP5BkLZQ5"
-RECAPTCHA_SECRET_KEY = "6LdQcA0rAAAAANP90HteUBk4P6EbsmIE_VfJeN9L"
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PWD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
+    }
+}
+
+"""DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "voldil",
+        "USER": "postgres",
+        "PASSWORD": "lalala",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+}"""
