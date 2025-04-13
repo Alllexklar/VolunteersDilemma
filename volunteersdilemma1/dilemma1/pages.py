@@ -5,6 +5,9 @@ import random
 
 
 class Introduction(Page):
+    def is_displayed(self):
+        return self.round_number == 1
+
     def vars_for_template(self):
         return dict(
             message="Welcome to the real-effort typing task. Type the signs in reverse!"
@@ -17,7 +20,7 @@ class Introduction(Page):
         # Initialize total_correct in participant.vars if it doesn't exist yet
         if "total_correct" not in participant.vars:
             participant.vars["total_correct"] = 0
-            participant.vars["required_correct"] = 2
+            participant.vars["required_correct"] = 5
             participant.vars["finished_task"] = 0
             participant.vars["skip"] = 0
 
@@ -25,9 +28,15 @@ class AnimalChoice(Page):
     form_model = 'player'
     form_fields = ['pet_choice']
 
+    def is_displayed(self):
+        return self.round_number == 1
+
 class FunFact(Page):
     form_model = 'player'
     form_fields = []
+
+    def is_displayed(self):
+        return self.round_number == 1
 
     def vars_for_template(self):
         if self.player.pet_choice == 'cat':
@@ -49,6 +58,9 @@ class MywaitingPage(Page):
     form_model = 'player'
     form_fields = []
 
+    def is_displayed(self):
+        return self.round_number == 1
+
     
     def before_next_page(self):
         start_time = time.time()
@@ -63,6 +75,9 @@ class MywaitingPage(Page):
 class Volunteering(Page):
     form_model = 'player'
     form_fields = ['volunteered']
+
+    def is_displayed(self):
+        return self.round_number == 1
 
     def vars_for_template(self):
 
@@ -114,7 +129,12 @@ class Volunteering(Page):
 
 class TypingTask(Page):
     def is_displayed(self):
-        return self.player.participant.vars["total_correct"] < self.player.participant.vars["required_correct"] and self.player.participant.vars['skip'] == 0
+        return (
+            self.player.participant.vars["total_correct"]
+            < self.player.participant.vars["required_correct"]
+            and self.player.participant.vars['skip'] == 0
+            and self.player.volunteered == 1 # if not volunteered, skip the task
+        ) 
 
     form_model = "player"
     form_fields = ["answer", "skip"]
@@ -150,6 +170,7 @@ class TypingTask(Page):
 class Questionnaire1(Page):
     form_model = 'player'
     form_fields = ['satisfaction']
+
 
 page_sequence = [Introduction, AnimalChoice, FunFact, MywaitingPage, Volunteering, TypingTask, Questionnaire1]
 

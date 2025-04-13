@@ -39,7 +39,7 @@ else:
 class C(BaseConstants):
     NAME_IN_URL = 'dilemma1'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 1
+    NUM_ROUNDS = 10
 
 class Subsession(BaseSubsession):
 
