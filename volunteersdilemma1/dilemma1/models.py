@@ -1,12 +1,11 @@
-from django.db import transaction
-from django.apps import apps
-import django.db.models as django_models
-from django.db.models import F
-from otree.api import BaseConstants, BaseSubsession, BaseGroup, BasePlayer, widgets, models, ExtraModel
 import os
+import string
+import random
 import redis
 import json
 import fakeredis
+from otree.api import *
+from django import forms
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -41,9 +40,6 @@ class C(BaseConstants):
     NAME_IN_URL = 'dilemma1'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
-
-
-
 
 class Subsession(BaseSubsession):
 
@@ -191,17 +187,32 @@ class Subsession(BaseSubsession):
                 groups.append(new_group)
 
                 # Set player's group info.
-                player.group_assignment = f"{condition}_{group_id}"
+                new_group_assignment = f"{condition}_{group_id}"
+
+                print(f"Assigning player to {new_group_assignment}, group id: {my_group_id}")
+
+                player.group_assignment = new_group_assignment
                 player.my_group_id = my_group_id
 
             # Save the updated grouping data back into Redis.
             redis_client.set(grouping_key, json.dumps(data))
 
-
 class Group(BaseGroup):
     pass
 
 class Player(BasePlayer):
+    pet_balance = models.IntegerField(
+        label="Please drag the slider to indicate your estimate:",
+        widget=forms.NumberInput(
+            attrs={
+                'type': 'range',
+                'min': -100,
+                'max': 100,
+                'step': 1,
+                'value': 0,  # default starting value
+            }
+        ),
+    )
     pet_choice = models.CharField(
         label="Select a pet",
         choices=[
@@ -210,15 +221,14 @@ class Player(BasePlayer):
         ],
         widget=widgets.RadioSelect
     )
+
+    # Waiting page assignment variables
     group_assignment = models.StringField(blank=True)
     my_group_id = models.IntegerField(blank=True, null=True)
     
     
-    # if image of same group member in majority is "left" or "right", for minority "none"
-    img_position = models.StringField(blank=True)
-
-
     # Volunteer's dilemma
+    img_position = models.StringField(blank=True) #if image of same group member in majority is "left" or "right", for minority "none"
     volunteered = models.IntegerField(
         label="Do you volunteer",
         choices=[
@@ -227,6 +237,16 @@ class Player(BasePlayer):
         ],
         widget=widgets.RadioSelect
     )
+
+    # For real effort task
+    shown_signs = models.StringField()
+    answer = models.StringField(blank=True)
+    total_correct = models.IntegerField(initial=0)
+    skip = models.BooleanField(initial=0, blank=True)
+    correct = models.StringField()
+
+
+    # Post-test questions
     satisfaction = models.IntegerField(
             label="How satisfied are you with the experiment?",
             choices=[

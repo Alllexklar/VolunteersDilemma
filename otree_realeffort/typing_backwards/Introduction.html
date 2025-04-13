@@ -1,0 +1,26 @@
+{% extends "global/Page.html" %}
+{% load i18n static otree %}
+
+{% block title %}
+Backwards Typing Task
+{% endblock %}
+
+{% block content %}
+    <p>
+        In this backwards typing task, you will be shown a series of random strings. Each of these strings consists of 10 signs (= numbers and letters). 
+        </p>
+        <p>
+        An example string is: <strong>%rJ?Q9PvX8</strong>
+    </p>
+    <p>
+        Your goal is to type the strings over backwards, precisely in reverse order. So, if the displayed string is 
+        <strong>%rJ?Q9PvX8</strong>, you should type: <strong>8XvP9Q?Jr%</strong>. 
+        If you reverse 10 strings correctly, you are allowed to proceed.
+    </p>
+    
+    <p>Please click “Next” button below when you are ready.</p>
+    
+    <form method="post">
+        <button type="submit" class="btn btn-primary">Next</button>
+    </form>
+{% endblock %}

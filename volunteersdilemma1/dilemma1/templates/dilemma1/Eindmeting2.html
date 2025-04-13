@@ -1,0 +1,286 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+   
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'back_button_v3/js/prev_next_button.js' %}"></script>
+
+{% endblock %}
+
+
+{% block styles %}
+
+<link href="{% static 'back_button_v3/css/custom.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Tab navigation -->
+<ul class="nav nav-tabs fixed-top navbar-light bg-light justify-content-center " id="myTab" role="tablist">
+  
+
+  <li class="nav-item" >
+    <a class="nav-link active" id="part1-tab" data-toggle="tab" href="#part1" role="tab" aria-controls="part1" onclick="topFunction()"> Tab 1 
+</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="part2-tab" data-toggle="tab" href="#part2" role="tab" aria-controls="part2" onclick="topFunction()">Tab 2</a>
+  </li>
+
+</ul>
+<br>
+<br>
+
+
+<!-- Tab content -->
+<div class="tab-content" id="myTabContent">
+
+  <div class="tab-pane show active" id="part1" role="tabpanel" aria-labelledby="part1-tab">
+
+<h2>Overzicht februari 2025</h2>
+<br>
+
+Het is nu het einde van februari 2025. Hieronder ziet u een overzicht van de inkomsten en uitgaven van uw huishouden van de afgelopen maand. Bij ‘eindsaldo’ vindt u het resterende bedrag dat op uw bankrekening staat als u de terugvordering van Dienst Toeslagen heeft betaald.<br><br>
+<table>
+  <tr>
+    <td>Beginsaldo</td>
+    <td></td>
+    <td STYLE="text-align:right">€ {{beginsaldo}}</td>
+  </tr>
+  <tr>
+      <td>&emsp;</td>
+      <td></td>
+      <td></td>
+    </tr>
+  <tr>
+      <td>Gezamenlijk inkomen</td>
+      <td STYLE="text-align:right">€ {{inkomen}}</td>
+    </tr>
+    <tr>
+      <td>Kinderopvangtoeslag&emsp;</td>
+      <td STYLE="text-align:right">€ {{kinderopvangtoeslag}}</td>
+      <td>+</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>&emsp;_______________</td>
+        <td></td>
+      </tr>
+    <tr>
+      <td>Totale inkomsten</td>
+      <td></td>
+      <td STYLE="text-align:right">&emsp;€ {{inkomsten}}</td>
+    </tr>
+    <tr>
+        <td>&emsp;</td>
+        <td></td>
+        <td></td>
+      </tr>
+    <tr>
+      <td>Kosten kinderopvang&emsp;&emsp;</td>
+      <td STYLE="text-align:right">€ {{kinderopvangkosten}}</td>
+    </tr>
+    <tr>
+      <td>Overige uitgaven&emsp;</td>
+      <td STYLE="text-align:right">€ {{uitgaven}}</td>
+      <td></td>
+    </tr>
+    {% if player.terugvordering > 0 %}
+    <tr>
+      <td>Terugvordering</td>
+      <td STYLE="text-align:right">€ {{terugvordering}}</td>
+      <td>+</td>
+    </tr>
+
+      {% endif %}
+
+
+    <tr>
+        <td></td>
+        <td>&emsp;_______________</td>
+        <td></td>
+      </tr>
+      <tr>
+          <td>Totale uitgaven</td>
+          <td></td>
+          <td STYLE="text-align:right">&emsp;€ {{totaleuitgaven}}</td>
+          <td>-</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>&emsp;_______________</td>
+            <td></td>
+          </tr>
+    
+          {% if player.maandsaldo > 0 %}
+          <tr>
+              <td><strong>Maandsaldo</strong></td>
+              <td></td>
+              <td STYLE="text-align:right"><strong>€ {{maandsaldo}}</strong></td>
+            </tr>
+            {% endif %}
+            {% if player.maandsaldo < 0 %}
+          <tr>
+              <td><strong>Maandsaldo</strong></td>
+              <td></td>
+              <td STYLE="text-align:right"><strong>-€ {{maandsaldo}}</strong></td>
+            </tr>
+            {% endif %}
+      <tr>
+          <td>&emsp;</td>
+          <td></td>
+          <td></td>
+        </tr>
+    <tr>
+      <td>Eindsaldo</td>
+      <td></td>
+      <td STYLE="text-align:right">€ {{eindsaldo}}</td>
+    </tr>
+</table>
+
+<style>
+table, th, td {
+  border: none;
+}
+</style>
+
+
+<button onclick="topFunction()" type="button" class="nexttab btn-primary btn next">Volgende</button>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+  <div class="tab-pane" id="part2" role="tabpanel" aria-labelledby="part2-tab">
+
+
+Tot slot willen we u vragen om nog enkele vragen te beantwoorden.<br><br>
+<p>
+1. In hoeverre was u tijdens de simulatie in het algemeen tevreden over Dienst Toeslagen?
+<ul class="likert">
+  <li>Helemaal niet&emsp;</li>
+  <li><input type="radio" name="question_5" value="1" />&emsp;</li>
+  <li><input type="radio" name="question_5" value="2" />&emsp;</li>
+  <li><input type="radio" name="question_5" value="3" />&emsp;</li>
+  <li><input type="radio" name="question_5" value="4" />&emsp;</li>
+  <li><input type="radio" name="question_5" value="5" />&emsp;</li>
+  <li><input type="radio" name="question_5" value="6" />&emsp;</li>
+  <li><input type="radio" name="question_5" value="7" />&emsp;</li>
+  <li>Helemaal wel</li>
+</ul>
+</p>
+<br><br>
+<p>2. U moest in februari 2025 € {{terugvordering}} euro terugbetalen. In hoeverre was u hierdoor verrast? 
+  <ul class="likert">
+    <li>Helemaal niet&emsp;</li>
+    <li><input type="radio" name="question_6" value="1" />&emsp;</li>
+    <li><input type="radio" name="question_6" value="2" />&emsp;</li>
+    <li><input type="radio" name="question_6" value="3" />&emsp;</li>
+    <li><input type="radio" name="question_6" value="4" />&emsp;</li>
+    <li><input type="radio" name="question_6" value="5" />&emsp;</li>
+    <li><input type="radio" name="question_6" value="6" />&emsp;</li>
+    <li><input type="radio" name="question_6" value="7" />&emsp;</li>
+    <li>Helemaal wel</li>
+  </ul>
+</p>
+<br><br>
+<p>3. U heeft nu kunnen ervaren hoe het was om een aantal maanden kinderopvangtoeslag te ontvangen. Op basis van hoe u zich voelde in deze periode, in hoeverre zou u in het echte leven nu kinderopvangtoeslag aan willen vragen als u daar recht op had?
+  <ul class="likert">
+    <li>Helemaal niet&emsp;</li>
+    <li><input class="question_7" type="radio" name="question_7" value="1" />&emsp;</li>
+    <li><input class="question_7" type="radio" name="question_7" value="2" />&emsp;</li>
+    <li><input class="question_7" type="radio" name="question_7" value="3" />&emsp;</li>
+    <li><input class="question_7" type="radio" name="question_7" value="4" />&emsp;</li>
+    <li><input class="question_7" type="radio" name="question_7" value="5" />&emsp;</li>
+    <li><input class="question_7" type="radio" name="question_7" value="6" />&emsp;</li>
+    <li><input class="question_7" type="radio" name="question_7" value="7" />&emsp;</li>
+    <li>Helemaal wel</li>
+  </ul>
+</p>
+<br>
+
+<style>.likert li {
+    float: left;
+    list-style-type: none;
+  }</style>
+
+<script>
+    const errorDiv = document.querySelector('.otree-form-errors');
+  
+    if (errorDiv) {
+        errorDiv.textContent = 'U heeft niet alle vragen ingevuld. Lees het overzicht opnieuw door, en vul vervolgens alle vragen in.'
+    }
+  </script>
+
+<style>
+        .left{
+        position:relative;
+        left:0px;
+    }
+        .right{
+        position: relative;
+        left:160px
+    }
+    
+    </style>
+    <p id="result"></p>
+    <button onclick="topFunction()" type="button" class="prevtab btn-primary btn back">Terug</button>
+    <button id="nextButton" class="nexttab btn-primary btn next">Volgende</button>
+      </div>
+<style>
+      #nextButton {
+        display: none;
+      }
+    </style>
+
+</div>
+
+</body>
+
+<script>
+function countCheckedRadios() {
+  // Select all radio buttons
+  const radioGroups = document.querySelectorAll('input[type="radio"]');
+
+  // Initialize a counter
+  let checkedCount = 0;
+
+  // Loop through each radio button
+  radioGroups.forEach(function(radio) {
+      if (radio.checked) {
+          checkedCount++;
+      }
+  });
+
+  // Show the "Next" button if the count is higher than 2
+  const nextButton = document.getElementById('nextButton');
+  if (checkedCount > 2) {
+      nextButton.style.display = 'block'; // Show the button
+  }
+}
+
+// Select all radio buttons and add an event listener
+const radioButtons = document.querySelectorAll('input[type="radio"]');
+radioButtons.forEach(function(radio) {
+  radio.addEventListener('click', countCheckedRadios);
+});
+</script>
+      
+{% endblock %}
+
+
+
