@@ -2,6 +2,7 @@ from otree.api import *
 import time
 import string
 import random
+from .models import *
 
 
 class Introduction(Page):
@@ -26,10 +27,18 @@ class Introduction(Page):
 
 class AnimalChoice(Page):
     form_model = 'player'
-    form_fields = ['pet_choice']
+    form_fields = ['pet_balance']
 
     def is_displayed(self):
         return self.round_number == 1
+    
+    def before_next_page(self):
+        if self.player.pet_balance < 200:
+            self.player.pet_choice = 'cat'
+        elif self.player.pet_balance > 200:
+            self.player.pet_choice = 'dog'
+        else:
+            print("Error: pet_balance is 200. This should not happen.")
 
 class FunFact(Page):
     form_model = 'player'
@@ -42,11 +51,11 @@ class FunFact(Page):
         if self.player.pet_choice == 'cat':
             top_text = "You're a cat person!"
             img_src = 'dilemma1/images/cat.png'
-            fun_fact = "Cats have a special collarbone that allows them to always land on their feet."
+            fun_fact = "Fun fact: Cats can sleep between 12 - 18 hours per day."
         else:
             top_text = "You're a dog person!"
             img_src = 'dilemma1/images/dog.png'
-            fun_fact = "Dogs have a sense of time and can predict future events."
+            fun_fact = "Fun fact: A dog's nose print is unique, much like a person's fingerprint."
 
         return {
             "top_text": top_text,
@@ -71,25 +80,28 @@ class MywaitingPage(Page):
         if elapsed < 3:
             pass #time.sleep(2 - elapsed)
             
-
-class Volunteering(Page):
-    form_model = 'player'
-    form_fields = ['volunteered']
-
+class GroupPage(Page):
     def is_displayed(self):
         return self.round_number == 1
 
     def vars_for_template(self):
-
         # Decide which image to display
         self_image_src = f'dilemma1/images/{self.player.pet_choice}.png'
         opposite_src = 'dilemma1/images/dog.png' if self.player.pet_choice == 'cat' else 'dilemma1/images/cat.png'
+
+        oppdict = {
+            'cat': 'dog',
+            'dog': 'cat'
+        }
         
         if self.player.pet_choice in self.player.group_assignment:
             player_a_img_src = opposite_src
             player_b_img_src = opposite_src
             self.player.img_position = "none"
+            msg = f'We have placed you in a group with two {oppdict[self.player.pet_choice]} lovers.'
         else:
+            msg = f'We have placed you in a group with one {self.player.pet_choice} lover and one {oppdict[self.player.pet_choice]} lover.'
+
             # randomly assign images for player A and B
             if random.random() < 0.5:
                 player_a_img_src = self_image_src
@@ -104,28 +116,50 @@ class Volunteering(Page):
             "self_image_src": self_image_src,
             "player_a_img_src": player_a_img_src,
             "player_b_img_src": player_b_img_src,
+            "msg": msg,
         }
 
-    def before_next_page(self):
-        matching_players = [
-            p for p in self.group.get_players()
-            if p.field_maybe_none('group_assignment') == self.player.group_assignment
-        ]
+class Volunteering(Page):
+    form_model = 'player'
+    form_fields = ['volunteered']
 
-        # Check if any matching player already has bonus==1.
-        if any(p.field_maybe_none('payoff') == 1 for p in matching_players):
-            self.player.payoff = 1
-            return
+    
+    def is_displayed(self):
+        return self.round_number == 1
 
-        # Determine bonus based on whether any matching player's volunteered field equals 1.
-        bonus_payout = 1 if any(p.field_maybe_none('volunteered') == 1 for p in matching_players) else 0
-
-        # Set bonus for all matching players.
-        for p in matching_players:
-            p.payoff = bonus_payout
+    def vars_for_template(self):
+        oppdict = {
+            'cat': 'dog',
+            'dog': 'cat'
+        }
 
 
+        # Decide which image to display
+        self_image_src = f'dilemma1/images/{self.player.pet_choice}.png'
+        opposite_src = 'dilemma1/images/dog.png' if self.player.pet_choice == 'cat' else 'dilemma1/images/cat.png'
+        
+        if self.player.pet_choice in self.player.group_assignment:
+            player_a_img_src = opposite_src
+            player_b_img_src = opposite_src
+            msg = f'You are in a group with two {oppdict[self.player.pet_choice]} lovers.'
+        
+        elif self.player.img_position == "left":
+            player_a_img_src = self_image_src
+            player_b_img_src = opposite_src
+            msg = f'You are in a group with one {self.player.pet_choice} lover and one {oppdict[self.player.pet_choice]} lover.'
+        elif self.player.img_position == "right":
+            player_a_img_src = opposite_src
+            player_b_img_src = self_image_src
+            msg = f'You are in a group with one {self.player.pet_choice} lover and one {oppdict[self.player.pet_choice]} lover.'
+        else:
+            print("Error: img_position is not set. This should not happen.")
 
+        return {
+            "self_image_src": self_image_src,
+            "player_a_img_src": player_a_img_src,
+            "player_b_img_src": player_b_img_src,
+            "msg": msg,
+        }
 
 class TypingTask(Page):
     def is_displayed(self):
@@ -155,7 +189,6 @@ class TypingTask(Page):
 
         # Check correctness
         if self.player.answer == self.player.shown_signs[::-1]:
-            self.player.payoff = cu(1)
             participant.vars["total_correct"] += 1
             self.player.correct = "Correct!"
         else:
@@ -166,11 +199,118 @@ class TypingTask(Page):
         # Example: pick from uppercase letters + digits
         symbols = string.ascii_letters + string.digits + "?![]@#$%&*()_+"
         return ''.join(random.choices(symbols, k=n))
+    
+    def handle_payoff(self):
+        matching_players = [
+            p for p in self.group.get_players()
+            if p.field_maybe_none('group_assignment') == self.player.group_assignment
+        ]
+
+        # Check if any matching player already has bonus==1.
+        if any(p.field_maybe_none('payoff') == 1 for p in matching_players):
+            self.player.payoff = 1
+            return
+        
+        # Determine bonus based on whether any matching player's volunteered field equals 1.
+        bonus_payout = 1 if any(p.field_maybe_none('volunteered') == 1 for p in matching_players) else 0
+
+        # Set bonus for all matching players.
+        for p in matching_players:
+            p.payoff = bonus_payout
+
+class ManipulationCheck(Page):
+    form_model = 'player'
+    form_fields = ['mpc1', 'mpc2', 'mpc3', 'mpc4', 'mpc5', 'mpc6', 'mpc7']
+
+    def is_displayed(self):
+        return self.round_number == 1
+    
+    def vars_for_template(self):
+        oppdict = {
+            'cat': 'dog',
+            'dog': 'cat'
+        }
+
+        questions = {
+            "mpc1": f"As a {self.player.pet_choice} lover, I felt I was on my own within my 3-person group.",
+            "mpc2": "I felt I had something in common with the 2 other members of my group.",
+            "mpc3": "I feel positively about people with my animal preference.",
+            "mpc4": f"I feel negatively about people with {oppdict[self.player.pet_choice]} preference.",
+            "mpc5": "I believe the preference for cats/dogs reveals something meaningful about people.",
+            "mpc6": f"As a {self.player.pet_choice} lover, I felt I had a high status within my 3-person group.",
+            "mpc7": f"As a {self.player.pet_choice} lover, I felt I had a low status within my 3-person group."
+        }
+        return {"questions": questions}
+
+class SociotrophyQuestionnaire(Page):
+    form_model = 'player'
+    form_fields = [
+        'stq1', 'stq2', 'stq3', 'stq4', 'stq5', 'stq6', 'stq7', 'stq8', 'stq9', 'stq10',
+        'stq11', 'stq12', 'stq13', 'stq14', 'stq15', 'stq16', 'stq17', 'stq18', 'stq19', 'stq20',
+        'stq21', 'stq22', 'stq23', 'stq24'
+    ]
+
+    def is_displayed(self):
+        return self.round_number == 1
+    
+    def vars_for_template(self):
+        questions = {
+            "stq1": "I often put other people's needs before my own.",
+            "stq2": "I find it difficult to be separated from people I love.",
+            "stq3": "I am very sensitive to the effects I have on the feelings of other people.",
+            "stq4": "I am very sensitive to criticism by others.",
+            "stq5": "I worry a lot about hurting or offending other people.",
+            "stq6": "It is hard for me to break off a relationship even if it is making me unhappy.",
+            "stq7": "I am easily persuaded by others.",
+            "stq8": "I try to please other people too much.",
+            "stq9": "I find it difficult if I have to be alone all day.",
+            "stq10": "I often feel responsible for solving other people's problems.",
+            "stq11": "It is very hard for me to get over the feeling of loss when a relationship has ended.",
+            "stq12": "It is very important to me to be liked or admired by others.",
+            "stq13": "I feel I have to be nice to other people.",
+            "stq14": "I like to be certain that there is somebody close I can contact in case something unpleasant happens to me.",
+            "stq15": "I am too apologetic to other people.",
+            "stq16": "I am very concerned with how people react to me.",
+            "stq17": "I get very uncomfortable when I'm not sure whether or not someone likes me.",
+            "stq18": "It is hard for me to say 'no' to other people's requests.",
+            "stq19": "I become upset when something happens to me and there's nobody around to talk to.",
+            "stq20": "I am most comfortable when I know my behavior is what others expect of me.",
+            "stq21": "I often let people take advantage of me.",
+            "stq22": "I become very upset when a friend breaks a date or forgets to call me as planned.",
+            "stq23": "I judge myself based on how I think others feel about me.",
+            "stq24": "It is hard for me to let people know when I am angry with them."
+        }
+        return {"questions": questions}
+
+class BigFiveQuestionnaire(Page):
+    form_model = 'player'
+    form_fields = ['bfp1', 'bfp2', 'bfp3', 'bfp4', 'bfp5', 'bfp6', 'bfp7', 'bfp8', 'bfp9', 'bfp10', 'bfp11']
+
+    def is_displayed(self):
+        return self.round_number == 1
+    
+    def vars_for_template(self):
+        questions = {
+            "bfp1": "...is reserved.",
+            "bfp2": "...is generally trusting.",
+            "bfp3": "...tends to be lazy.",
+            "bfp4": "...is relaxed, handles stress well.",
+            "bfp5": "...has few artistic interests.",
+            "bfp6": "...is outgoing, sociable.",
+            "bfp7": "...tends to find fault with others.",
+            "bfp8": "...does a thorough job.",
+            "bfp9": "...gets nervous easily.",
+            "bfp10": "...has an active imagination.",
+            "bfp11": "...is sometimes rude to others."
+        }
+        return {"questions": questions}
+
+
 
 class Questionnaire1(Page):
     form_model = 'player'
     form_fields = ['satisfaction']
 
 
-page_sequence = [Introduction, AnimalChoice, FunFact, MywaitingPage, Volunteering, TypingTask, Questionnaire1]
+page_sequence = [AnimalChoice, FunFact, MywaitingPage, GroupPage, Introduction, Volunteering, TypingTask, ManipulationCheck, SociotrophyQuestionnaire, BigFiveQuestionnaire]
 

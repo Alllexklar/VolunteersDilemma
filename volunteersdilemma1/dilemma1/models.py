@@ -7,6 +7,8 @@ import fakeredis
 from otree.api import *
 from django import forms
 from dotenv import load_dotenv
+
+
 load_dotenv()
 
 
@@ -35,6 +37,8 @@ else:
     except redis.ConnectionError as e:
         print(f"Failed to connect to Redis: {e}")
         redis_client = None
+
+
 
 class C(BaseConstants):
     NAME_IN_URL = 'dilemma1'
@@ -201,26 +205,8 @@ class Group(BaseGroup):
     pass
 
 class Player(BasePlayer):
-    pet_balance = models.IntegerField(
-        label="Please drag the slider to indicate your estimate:",
-        widget=forms.NumberInput(
-            attrs={
-                'type': 'range',
-                'min': -100,
-                'max': 100,
-                'step': 1,
-                'value': 0,  # default starting value
-            }
-        ),
-    )
-    pet_choice = models.CharField(
-        label="Select a pet",
-        choices=[
-            ('cat', 'Cat'),
-            ('dog', 'Dog')
-        ],
-        widget=widgets.RadioSelect
-    )
+    pet_balance = models.IntegerField()
+    pet_choice = models.CharField()
 
     # Waiting page assignment variables
     group_assignment = models.StringField(blank=True)
@@ -246,15 +232,50 @@ class Player(BasePlayer):
     correct = models.StringField()
 
 
-    # Post-test questions
-    satisfaction = models.IntegerField(
-            label="How satisfied are you with the experiment?",
-            choices=[
-                [1, 'Strongly Disagree'],
-                [2, 'Disagree'],
-                [3, 'Neutral'],
-                [4, 'Agree'],
-                [5, 'Strongly Agree']
-            ],
-            widget=widgets.RadioSelectHorizontal
-        )
+    # Manipulation check questions, 1-7 likert scale "strongly disagree" to "strongly agree"
+    mpc1 = models.IntegerField()
+    mpc2 = models.IntegerField()
+    mpc3 = models.IntegerField()
+    mpc4 = models.IntegerField()
+    mpc5 = models.IntegerField()
+    mpc6 = models.IntegerField()
+    mpc7 = models.IntegerField()
+
+    # Sociotrophy questionnaire, 1-6 likert scale "strongly disagree" to "strongly agree"
+    stq1 = models.IntegerField()
+    stq2 = models.IntegerField()
+    stq3 = models.IntegerField()
+    stq4 = models.IntegerField()
+    stq5 = models.IntegerField()
+    stq6 = models.IntegerField()
+    stq7 = models.IntegerField()
+    stq8 = models.IntegerField()
+    stq9 = models.IntegerField()
+    stq10 = models.IntegerField()
+    stq11 = models.IntegerField()
+    stq12 = models.IntegerField()
+    stq13 = models.IntegerField()
+    stq14 = models.IntegerField()
+    stq15 = models.IntegerField()
+    stq16 = models.IntegerField()
+    stq17 = models.IntegerField()
+    stq18 = models.IntegerField()
+    stq19 = models.IntegerField()
+    stq20 = models.IntegerField()
+    stq21 = models.IntegerField()
+    stq22 = models.IntegerField()
+    stq23 = models.IntegerField()
+    stq24 = models.IntegerField()
+
+    # Big Five Personality questionnaire, 1-5 likert scale "strongly disagree" to "strongly agree"
+    bfp1 = models.IntegerField()
+    bfp2 = models.IntegerField()
+    bfp3 = models.IntegerField()
+    bfp4 = models.IntegerField()
+    bfp5 = models.IntegerField()
+    bfp6 = models.IntegerField()
+    bfp7 = models.IntegerField()
+    bfp8 = models.IntegerField()
+    bfp9 = models.IntegerField()
+    bfp10 = models.IntegerField()
+    bfp11 = models.IntegerField()

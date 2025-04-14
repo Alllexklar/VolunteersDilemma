@@ -1,14 +1,8 @@
 {% extends "global/Page.html" %}
 {% load static %}
 
-{% block title %}
-Decision
-{% endblock %}
-
 {% block content %}
-    <p>{{ msg }} You can now choose whether you would like to volunteer so that all of you receive a bonus. The other participants of your group are also making their choice independently.</p>
-
-    <!-- Example image references -->
+    <h1>{{ msg }}</h1>
     <div class="image-container">
         <div class="top-image-container">
             <img src="{% static player_a_img_src %}" alt="Player A Image" />
@@ -19,20 +13,11 @@ Decision
             <div class="line2"></div>
             <div class="cat-wrapper">
                 <button 
-                    class="btn btn-primary volunteer-button" 
-                    name="volunteered"
-                    value="1"
-                    type="submit"
-                >
-                    Volunteer
-                </button>
-                <button 
                     class="btn btn-primary skip-button" 
                     name="volunteered"
-                    value="0"
                     type="submit"
                 >
-                    Skip
+                    Continue
                 </button>
                 <img src="{% static self_image_src %}" alt="Self Image" />
             </div>
