@@ -174,7 +174,7 @@ class TypingTask(Page):
     form_fields = ["answer", "skip"]
 
     def vars_for_template(self):
-        new_signs = self.generate_signs(2)
+        new_signs = self.generate_signs(10)
         self.player.shown_signs = new_signs
         return dict(shown_signs=new_signs)
 
@@ -197,7 +197,11 @@ class TypingTask(Page):
 
     def generate_signs(self, n=10):
         # Example: pick from uppercase letters + digits
-        symbols = string.ascii_letters + string.digits + "?![]@#$%&*()_+"
+        symbols = (
+            string.ascii_letters.replace('l', '').replace('I', '') +
+            string.digits +
+            "?![]@#$%&*()_+"
+        )
         return ''.join(random.choices(symbols, k=n))
     
     def handle_payoff(self):
