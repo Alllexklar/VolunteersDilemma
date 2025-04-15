@@ -5,7 +5,6 @@ import redis
 import json
 import fakeredis
 from otree.api import *
-from django import forms
 from dotenv import load_dotenv
 
 

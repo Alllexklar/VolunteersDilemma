@@ -44,28 +44,4 @@ DEMO_PAGE_INTRO_HTML = """ """
 
 SECRET_KEY = '7292570324700'
 
-DEBUG = environ.get('DEBUG', 'false').lower() == 'true'
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PWD"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
-    }
-}
-
-"""DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "voldil",
-        "USER": "postgres",
-        "PASSWORD": "lalala",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
-}"""
+DEBUG = False
