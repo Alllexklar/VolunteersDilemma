@@ -1,5 +1,7 @@
-# oTree-may-overwrite-this-file
-# IF YOU MODIFY THIS FILE, remove this comment.
-# otherwise, oTree will automatically overwrite it.
-otree>=5.0.0a21
+# oTree-may-not-overwrite-this-file
+otree==5.11.1
 psycopg2>=2.8.4
+sentry-sdk>=0.7.9
+redis>=5.0.0
+fakeredis==2.28.1
+dotenv==1.1.0
