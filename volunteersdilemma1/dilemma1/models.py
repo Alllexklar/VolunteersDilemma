@@ -32,7 +32,10 @@ else:
     redis_url = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
     print(f"Connecting to Redis at {redis_url}")
     try:
-        redis_client = redis.from_url(redis_url)
+        redis_client = redis.from_url(
+            redis_url,
+            ssl_cert_reqs=None,
+        )
     except redis.ConnectionError as e:
         print(f"Failed to connect to Redis: {e}")
         redis_client = None
@@ -74,7 +77,7 @@ class Subsession(BaseSubsession):
         lock_key = f"dilemma1:{self.session.code}:grouping_lock"
 
         # Use Redis lock to ensure that this block is executed exclusively.
-        with redis_client.lock(lock_key, timeout=20, blocking=True):
+        with redis_client.lock(lock_key, timeout=360, blocking=True):
             # Get the current grouping data from Redis (stored as JSON).
             data_str = redis_client.get(grouping_key)
             if not data_str:

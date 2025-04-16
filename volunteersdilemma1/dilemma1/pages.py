@@ -310,11 +310,5 @@ class BigFiveQuestionnaire(Page):
         return {"questions": questions}
 
 
-
-class Questionnaire1(Page):
-    form_model = 'player'
-    form_fields = ['satisfaction']
-
-
 page_sequence = [AnimalChoice, FunFact, MywaitingPage, GroupPage, Introduction, Volunteering, TypingTask, ManipulationCheck, SociotrophyQuestionnaire, BigFiveQuestionnaire]
 
