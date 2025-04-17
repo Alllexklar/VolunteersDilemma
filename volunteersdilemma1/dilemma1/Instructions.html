@@ -1,0 +1,48 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+    <p>
+        Please read the following instructions carefully. You will be asked to answer a couple of questions
+         about them in the next step, to check whether you have understood them.
+    </p>
+    <p>
+        In your group, each member has received 1 pound bonus on top of the participation fee of 1.50. 
+        <b>All group members will receive this bonus if at least one person chooses to complete a task.</b>
+    </p>
+    <p>
+        The task will take about [insert timeframe] and will have to be completed alone. 
+        Any one of you can volunteer to do the task. If at least one person does, then everyone 
+        receives their bonus. If no one does, then none of the group members receive the bonus. You can 
+        volunteer to complete this task yourself or you can choose to go straight to the end questionnaire. 
+        You will not know what the other participants' choices are, each of you chooses independently. 
+        After all group members have made their decisions, you will find out whether you have received the bonus or not.
+    </p>
+    <br>
+    <p><b>Backwards-typing task</b></p>
+    <p>
+        The task you can choose to complete is a backwards-typing task. In this backwards typing task, you will be shown a 
+        series of random strings. Each of these strings consists of 10 signs (= numbers and letters). 
+    </p>
+    <p>An example string is: %rJ?Q9PvX8 </p>
+    <p>
+        Your goal is to type the strings over backwards, precisely in reverse order. So, if the displayed string is %rJ?Q9PvX8, 
+        you should type: 8XvP9Q?Jr%. If you reverse 10 strings correctly, you are allowed to proceed. 
+    </p>
+    <p>
+        This task is not mandatory. It is your choice whether you perform it or not for the benefit of the group. If you choose 
+        to skip it, you will be taken to the end questionnaire. 
+    </p>
+    <p>
+        You can also opt out during the task. If you choose to opt out before finishing all 10 strings, the task will be considered 
+        not completed and you will be taken to the end questionnaire.
+    </p>
+    <p>
+        Please click “Next” button below when you are ready. We will ask you some questions to check if you understood the instructions.
+    </p>
+    <button type="submit" class="btn btn-primary">Next</button>
+
+{% endblock %}

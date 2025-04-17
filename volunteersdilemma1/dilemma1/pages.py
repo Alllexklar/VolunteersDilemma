@@ -103,6 +103,37 @@ class GroupPage(Page):
             "msg": msg,
         }
 
+class Instructions(Page):
+    pass
+
+class ComprehensionQuestions(Page):
+    form_model = 'player'
+    form_fields = ['cc1', 'cc2', 'cc3', 'cc4', 'cc5']
+
+    CORRECT_ANSWERS = {
+        'cc1': 'C',
+        'cc2': 'A',
+        'cc3': 'B',
+        'cc4': 'C',
+        'cc5': 'B'
+    }
+
+    def error_message(self, values):
+        """
+        If you return a dict like {'cc2': 'nope'} then
+        that error will be shown under cc2 and the page
+        won’t advance. Only when this returns {} does
+        the user move on.
+        """
+        errors = {}
+        for field, answer in values.items():
+            correct = self.CORRECT_ANSWERS[field]
+            if answer != correct:
+                errors[field] = (
+                    f"“{answer}” is not correct - please review the instructions and try again."
+                )
+        return errors
+
 class Volunteering(Page):
     form_model = 'player'
     form_fields = ['volunteered']
@@ -214,7 +245,7 @@ class TypingTask(Page):
         for p in matching_players:
             p.payoff = bonus_payout
 
-class ManipulationCheck(Page):
+class Questionnaire1(Page):
     form_model = 'player'
     form_fields = ['mpc1', 'mpc2', 'mpc3', 'mpc4', 'mpc5', 'mpc6', 'mpc7']
 
@@ -238,7 +269,7 @@ class ManipulationCheck(Page):
         }
         return {"questions": questions}
 
-class SociotrophyQuestionnaire(Page):
+class Questionnaire2(Page):
     form_model = 'player'
     form_fields = [
         'stq1', 'stq2', 'stq3', 'stq4', 'stq5', 'stq6', 'stq7', 'stq8', 'stq9', 'stq10',
@@ -278,7 +309,7 @@ class SociotrophyQuestionnaire(Page):
         }
         return {"questions": questions}
 
-class BigFiveQuestionnaire(Page):
+class Questionnaire3(Page):
     form_model = 'player'
     form_fields = ['bfp1', 'bfp2', 'bfp3', 'bfp4', 'bfp5', 'bfp6', 'bfp7', 'bfp8', 'bfp9', 'bfp10', 'bfp11']
 
@@ -309,5 +340,19 @@ class DemographicQuestions(Page):
         return self.round_number == 1
 
 
-page_sequence = [Introduction, DemographicQuestions,AnimalChoice, FunFact, MywaitingPage, GroupPage,  Volunteering, TypingTask, ManipulationCheck, SociotrophyQuestionnaire, BigFiveQuestionnaire]
+page_sequence = [
+    Introduction, 
+    DemographicQuestions,
+    AnimalChoice, 
+    FunFact, 
+    MywaitingPage, 
+    GroupPage, 
+    Instructions,
+    ComprehensionQuestions,
+    Volunteering, 
+    TypingTask, 
+    Questionnaire1, 
+    Questionnaire2, 
+    Questionnaire3,
+]
 

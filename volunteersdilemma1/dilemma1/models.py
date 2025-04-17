@@ -236,9 +236,56 @@ class Player(BasePlayer):
     group_assignment = models.StringField(blank=True)
     my_group_id = models.IntegerField(blank=True, null=True)
     
-    
-    # Volunteer's dilemma
+    # Comprehension Check
+    cc1 = models.StringField(
+        label="How many members are in one group?",
+        choices=[
+            ["A", "One"],
+            ["B", "Two"],
+            ["C", "Three"],
+        ],
+        widget=widgets.RadioSelect,
+    )
+    cc2 = models.StringField(
+        label="Is executing the task optional?",
+        choices=[
+            ["A", "Yes"],
+            ["B", "No"],
+        ],
+        widget=widgets.RadioSelect,
+    )
+    cc3 = models.StringField(
+        label="What would be the task, should you choose to execute it?",
+        choices=[
+            ["A", "Choosing animal preference"],
+            ["B", "Bachwards typing task"],
+            ["C", "Filling out a questionnaire"],
+        ],
+        widget=widgets.RadioSelect,
+    )
+    cc4 = models.StringField(
+        label="What happens if you choose to complete the task?",
+        choices=[
+            ["A", "Only I get the bonus"],
+            ["B", "Only people with the same animal preference as me get the bonus"],
+            ["C", "Everyone in the group gets the bonus"],
+        ],
+        widget=widgets.RadioSelect,
+    )
+    cc5 = models.StringField(
+        label="What happens if you choose not to complete the task?",
+        choices=[
+            ["A", "I do not get any bonus"],
+            ["B", "I get the bonus if at least one other person completes the task"],
+        ],
+        widget=widgets.RadioSelect,
+    )
+
+    # Grouping page
     img_position = models.StringField(blank=True) #if image of same group member in majority is "left" or "right", for minority "none"
+
+
+    # Volunteer's dilemma
     volunteered = models.IntegerField(
         label="Do you volunteer",
         choices=[
