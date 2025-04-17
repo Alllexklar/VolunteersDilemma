@@ -18,22 +18,24 @@ Decision
         <div class="bottom-image-container">
             <div class="line2"></div>
             <div class="cat-wrapper">
-                <button 
-                    class="btn btn-primary volunteer-button" 
-                    name="volunteered"
-                    value="1"
-                    type="submit"
-                >
-                    Do task
-                </button>
-                <button 
-                    class="btn btn-primary skip-button" 
-                    name="volunteered"
-                    value="0"
-                    type="submit"
-                >
-                    Skip
-                </button>
+                <form method="post">
+                    <button
+                        class="btn btn-primary volunteer-button"
+                        name="volunteered"
+                        value="1"
+                        type="submit"
+                    >
+                        Do task
+                    </button>
+                    <button
+                        class="btn btn-primary skip-button"
+                        name="volunteered"
+                        value="0"
+                        type="submit"
+                    >
+                        Skip
+                    </button>
+                </form>
                 <img src="{% static self_image_src %}" alt="Self Image" />
             </div>
             <div class="line3"></div>

@@ -292,12 +292,14 @@ class Player(BasePlayer):
             [1, 'Yes'],
             [0, 'No']
         ],
-        widget=widgets.RadioSelect
+        widget=widgets.RadioSelect,
+        blank=True,
     )
 
     # For real effort task
     shown_signs = models.StringField()
     answer = models.StringField(blank=True)
+    correct_answer = models.StringField(blank=True)
     total_correct = models.IntegerField(initial=0)
     skip = models.BooleanField(initial=0, blank=True)
     correct = models.StringField()

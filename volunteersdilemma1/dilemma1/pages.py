@@ -9,6 +9,13 @@ class Introduction(Page):
     def is_displayed(self):
         return self.round_number == 1
 
+class DemographicQuestions(Page):
+    form_model = 'player'
+    form_fields = ['age','gender_identity', 'gender_other_input']
+
+    def is_displayed(self):
+        return self.round_number == 1
+
 class AnimalChoice(Page):
     form_model = 'player'
     form_fields = ['pet_balance']
@@ -104,7 +111,8 @@ class GroupPage(Page):
         }
 
 class Instructions(Page):
-    pass
+    def is_displayed(self):
+        return self.round_number == 1
 
 class ComprehensionQuestions(Page):
     form_model = 'player'
@@ -117,6 +125,9 @@ class ComprehensionQuestions(Page):
         'cc4': 'C',
         'cc5': 'B'
     }
+
+    def is_displayed(self):
+        return self.round_number == 1
 
     def error_message(self, values):
         """
@@ -134,7 +145,7 @@ class ComprehensionQuestions(Page):
                 )
         return errors
 
-class Volunteering(Page):
+class DecisionPage(Page):
     form_model = 'player'
     form_fields = ['volunteered']
 
@@ -177,6 +188,7 @@ class Volunteering(Page):
         }
     
     def before_next_page(self):
+        print(self.player.volunteered)
         participant = self.player.participant
         if "total_correct" not in participant.vars:
             participant.vars["total_correct"] = 0
@@ -205,6 +217,7 @@ class TypingTask(Page):
         # Pull out participant for convenience
         participant = self.player.participant
         participant.vars["skip"] = self.player.skip
+        self.player.correct_answer = self.player.shown_signs[::-1]
 
         # Initialize total_correct in participant.vars if it doesn't exist yet
         if "total_correct" not in participant.vars:
@@ -248,9 +261,6 @@ class TypingTask(Page):
 class Questionnaire1(Page):
     form_model = 'player'
     form_fields = ['mpc1', 'mpc2', 'mpc3', 'mpc4', 'mpc5', 'mpc6', 'mpc7']
-
-    def is_displayed(self):
-        return self.round_number == 1
     
     def vars_for_template(self):
         oppdict = {
@@ -276,9 +286,6 @@ class Questionnaire2(Page):
         'stq11', 'stq12', 'stq13', 'stq14', 'stq15', 'stq16', 'stq17', 'stq18', 'stq19', 'stq20',
         'stq21', 'stq22', 'stq23', 'stq24'
     ]
-
-    def is_displayed(self):
-        return self.round_number == 1
     
     def vars_for_template(self):
         questions = {
@@ -312,9 +319,6 @@ class Questionnaire2(Page):
 class Questionnaire3(Page):
     form_model = 'player'
     form_fields = ['bfp1', 'bfp2', 'bfp3', 'bfp4', 'bfp5', 'bfp6', 'bfp7', 'bfp8', 'bfp9', 'bfp10', 'bfp11']
-
-    def is_displayed(self):
-        return self.round_number == 1
     
     def vars_for_template(self):
         questions = {
@@ -332,13 +336,6 @@ class Questionnaire3(Page):
         }
         return {"questions": questions}
 
-class DemographicQuestions(Page):
-    form_model = 'player'
-    form_fields = ['age','gender_identity', 'gender_other_input']
-
-    def is_displayed(self):
-        return self.round_number == 1
-
 
 page_sequence = [
     Introduction, 
@@ -349,10 +346,10 @@ page_sequence = [
     GroupPage, 
     Instructions,
     ComprehensionQuestions,
-    Volunteering, 
+    DecisionPage,
     TypingTask, 
-    Questionnaire1, 
-    Questionnaire2, 
-    Questionnaire3,
+    #Questionnaire1, 
+    #Questionnaire2, 
+    #Questionnaire3,
 ]
 
