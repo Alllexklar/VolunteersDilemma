@@ -98,9 +98,9 @@ class GroupPage(Page):
             player_a_img_src = opposite_src
             player_b_img_src = opposite_src
             self.player.img_position = "none"
-            msg = f'We have placed you in a group with two {oppdict[self.player.pet_choice]} lovers.'
+            msg = f'You have been placed in a group with two {oppdict[self.player.pet_choice]} lovers.'
         else:
-            msg = f'We have placed you in a group with one {self.player.pet_choice} lover and one {oppdict[self.player.pet_choice]} lover.'
+            msg = f'You have been placed in a group with one {self.player.pet_choice} lover and one {oppdict[self.player.pet_choice]} lover.'
 
             # randomly assign images for player A and B
             if random.random() < 0.5:
