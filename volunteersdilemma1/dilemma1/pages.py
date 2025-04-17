@@ -9,22 +9,6 @@ class Introduction(Page):
     def is_displayed(self):
         return self.round_number == 1
 
-    def vars_for_template(self):
-        return dict(
-            message="Welcome to the real-effort typing task. Type the signs in reverse!"
-            )
-
-    def before_next_page(self):
-        # Pull out participant for convenience
-        participant = self.participant
-
-        # Initialize total_correct in participant.vars if it doesn't exist yet
-        if "total_correct" not in participant.vars:
-            participant.vars["total_correct"] = 0
-            participant.vars["required_correct"] = 5
-            participant.vars["finished_task"] = 0
-            participant.vars["skip"] = 0
-
 class AnimalChoice(Page):
     form_model = 'player'
     form_fields = ['pet_balance']
@@ -160,6 +144,14 @@ class Volunteering(Page):
             "player_b_img_src": player_b_img_src,
             "msg": msg,
         }
+    
+    def before_next_page(self):
+        participant = self.player.participant
+        if "total_correct" not in participant.vars:
+            participant.vars["total_correct"] = 0
+            participant.vars["required_correct"] = 5
+            participant.vars["finished_task"] = 0
+            participant.vars["skip"] = 0
 
 class TypingTask(Page):
     def is_displayed(self):
@@ -309,6 +301,13 @@ class BigFiveQuestionnaire(Page):
         }
         return {"questions": questions}
 
+class DemographicQuestions(Page):
+    form_model = 'player'
+    form_fields = ['age','gender_identity', 'gender_other_input']
 
-page_sequence = [AnimalChoice, FunFact, MywaitingPage, GroupPage, Introduction, Volunteering, TypingTask, ManipulationCheck, SociotrophyQuestionnaire, BigFiveQuestionnaire]
+    def is_displayed(self):
+        return self.round_number == 1
+
+
+page_sequence = [Introduction, DemographicQuestions,AnimalChoice, FunFact, MywaitingPage, GroupPage,  Volunteering, TypingTask, ManipulationCheck, SociotrophyQuestionnaire, BigFiveQuestionnaire]
 

@@ -207,6 +207,28 @@ class Group(BaseGroup):
     pass
 
 class Player(BasePlayer):
+    age = models.IntegerField(
+        label="How old are you?",
+        min=18,
+        max=120,
+    )
+    gender_identity = models.StringField(
+        label="Which gender do you identify with?",
+        choices=[
+            ['male', 'Male'],
+            ['female', 'Female'],
+            ['nonbinary', 'Non-binary'],
+            ['undisclosed', 'Prefer not to disclose'],
+            ['other', 'Other:'],
+        ],
+        widget=widgets.RadioSelect
+    )
+    gender_other_input = models.StringField(
+        blank=True,
+        label=""
+        )
+
+
     pet_balance = models.IntegerField()
     pet_choice = models.CharField()
 
