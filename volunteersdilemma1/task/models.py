@@ -15,6 +15,7 @@ class Group(BaseGroup):
     pass
 
 def generate_signs():
+    print("🖋️  Generating a new shown_signs")
     # Example: pick from uppercase letters + digits
     symbols = (
             string.ascii_letters.replace('l', '').replace('I', '') +
@@ -24,7 +25,7 @@ def generate_signs():
     return ''.join(random.choices(symbols, k=C.SIGN_COUNT))
 
 class Player(BasePlayer):
-    shown_signs     = models.StringField(default=generate_signs)
+    shown_signs     = models.StringField()
     answer          = models.StringField(blank=True)
     correct_answer  = models.StringField(blank=True)
     total_correct   = models.IntegerField(initial=0)

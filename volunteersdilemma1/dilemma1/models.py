@@ -223,11 +223,6 @@ class Player(BasePlayer):
         ],
         widget=widgets.RadioSelect
     )
-    gender_other_input = models.StringField(
-        blank=True,
-        label=""
-        )
-
 
     pet_balance = models.IntegerField()
     pet_choice = models.CharField()

@@ -14,7 +14,7 @@ SESSION_CONFIGS = [
             ],
     ),
 ]
-
+print("⚙️ settings.py loaded")
 
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs

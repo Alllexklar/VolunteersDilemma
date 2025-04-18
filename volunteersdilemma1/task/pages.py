@@ -1,5 +1,19 @@
 from otree.api import *
+from .models import C
 
+import random
+import string
+
+
+def generate_signs():
+    print("🖋️  Generating a new shown_signs")
+    # Example: pick from uppercase letters + digits
+    symbols = (
+            string.ascii_letters.replace('l', '').replace('I', '') +
+            string.digits +
+            "?![]@#$%&*()_+"
+        )
+    return ''.join(random.choices(symbols, k=C.SIGN_COUNT))
 
 class TypingTask(Page):
     form_model = "player"
@@ -16,11 +30,14 @@ class TypingTask(Page):
             self.player.participant.vars["total_correct"] 
             < self.player.participant.vars["required_correct"] 
             and self.player.participant.vars['skip'] == 0
-            and self.player.participant.vars.get('volunteered') == 1
+            #and self.player.participant.vars.get('volunteered') == 1
             )
 
     def vars_for_template(self):
-        return dict(shown_signs=self.player.shown_signs)
+        var = generate_signs()
+        self.player.shown_signs = var
+
+        return dict(shown_signs=var)
 
     def before_next_page(self):
         # Pull out participant for convenience
@@ -45,7 +62,7 @@ class Results(Page):
     def is_displayed(self):
         return (
             self.player.participant.vars['skip'] == 0
-            and self.player.participant.vars.get('volunteered') == 1
+            #and self.player.participant.vars.get('volunteered') == 1
             )
 
     def vars_for_template(player):

@@ -10,7 +10,7 @@ class Introduction(Page):
 
 class DemographicQuestions(Page):
     form_model = 'player'
-    form_fields = ['age','gender_identity', 'gender_other_input']
+    form_fields = ['age','gender_identity']
 
 class AnimalChoice(Page):
     form_model = 'player'
