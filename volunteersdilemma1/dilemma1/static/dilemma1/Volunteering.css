@@ -5,6 +5,23 @@
     flex-direction: column;
 }
 
+.image-container figure{
+    display:flex;
+    flex-direction:column;
+    align-items:center;   /* centres caption under the image */
+    margin:0;             /* remove browser default margins */
+}
+
+.image-container figcaption{
+    margin-top:.5rem;     /* gap between image & text */
+    font-size:1.25rem;    /* make it bigger – tweak as you like */
+    font-weight:600;      /* a bit bolder for clarity */
+    text-align:center;    /* extra safety for multiline captions */
+}
+
+.image-container img {
+    height: 133px;
+}
 
 .top-image-container {
     width: 100%;

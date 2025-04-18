@@ -30,7 +30,7 @@ class TypingTask(Page):
             self.player.participant.vars["total_correct"] 
             < self.player.participant.vars["required_correct"] 
             and self.player.participant.vars['skip'] == 0
-            #and self.player.participant.vars.get('volunteered') == 1
+            and self.player.participant.vars.get('volunteered') == 1
             )
 
     def vars_for_template(self):
@@ -62,7 +62,7 @@ class Results(Page):
     def is_displayed(self):
         return (
             self.player.participant.vars['skip'] == 0
-            #and self.player.participant.vars.get('volunteered') == 1
+            and self.player.participant.vars.get('volunteered') == 1
             )
 
     def vars_for_template(player):

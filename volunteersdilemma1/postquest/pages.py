@@ -81,9 +81,12 @@ class Questionnaire3(Page):
         }
         return {"questions": questions}
     
+class Debrief(Page):
+    pass
 
 page_sequence = [
     Questionnaire1,
     Questionnaire2,
-    Questionnaire3
+    Questionnaire3,
+    Debrief
 ]

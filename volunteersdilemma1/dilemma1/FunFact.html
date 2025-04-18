@@ -4,9 +4,18 @@
 {% block title %}
 {% endblock %}
 
+{% block styles  %}
+    <link href="{% static 'dilemma1/funfact.css' %}" rel="stylesheet"/>
+{% endblock %}
+
 {% block content %}
-    <h1>{{top_text}}</h1>
-    <img src="{% static img_src %}" alt="Animal Choice" class="animal-choice-image" />
-    <h3>{{fun_fact}}</h3>
-    <button type="submit" class="btn btn-primary">Continue</button>
+    <div class="animal-choice-container">
+        <h3>{{top_text}}</h3>
+        <br>
+        <img src="{% static img_src %}" alt="Animal Choice" class="animal-choice-image" />
+        <br>
+        <h4>{{fun_fact}}</h4>
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </div>
+    
 {% endblock %}

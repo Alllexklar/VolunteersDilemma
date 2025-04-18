@@ -11,9 +11,15 @@ Decision
     <!-- Example image references -->
     <div class="image-container">
         <div class="top-image-container">
-            <img src="{% static player_a_img_src %}" alt="Player A Image" />
+            <figure>
+                <img src="{% static player_a_img_src %}" alt="Participant A">
+                <figcaption>Participant A</figcaption>
+              </figure>
             <div class="line1"></div>
-            <img src="{% static player_b_img_src %}" alt="Player B Image" />
+            <figure>
+                <img src="{% static player_b_img_src %}" alt="Participant B">
+                <figcaption>Participant B</figcaption>
+            </figure>
         </div>
         <div class="bottom-image-container">
             <div class="line2"></div>
@@ -36,7 +42,11 @@ Decision
                         Skip
                     </button>
                 </form>
-                <img src="{% static self_image_src %}" alt="Self Image" />
+                
+                <figure>
+                    <img src="{% static self_image_src %}" alt="Self Image" />
+                    <figcaption>You</figcaption>
+                </figure>
             </div>
             <div class="line3"></div>
         </div>

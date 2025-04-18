@@ -63,6 +63,17 @@ class MywaitingPage(Page):
 class GroupPage(Page):
 
     def vars_for_template(self):
+        print(self.player.group_assignment)
+        if "control" in self.player.group_assignment:
+            return {
+            "self_image_src": 'dilemma1/images/blank.png',
+            "player_a_img_src": 'dilemma1/images/blank.png',
+            "player_b_img_src": 'dilemma1/images/blank.png',
+            "msg": "You have been placed in a group two other participants",
+        }
+
+
+
         # Decide which image to display
         self_image_src = f'dilemma1/images/{self.player.pet_choice}.png'
         opposite_src = 'dilemma1/images/dog.png' if self.player.pet_choice == 'cat' else 'dilemma1/images/cat.png'

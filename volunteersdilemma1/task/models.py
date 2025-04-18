@@ -1,6 +1,4 @@
 from otree.api import *
-import random
-import string
 
 class C(BaseConstants):
     NAME_IN_URL = 'typing_backwards'
@@ -13,16 +11,6 @@ class Subsession(BaseSubsession):
 
 class Group(BaseGroup):
     pass
-
-def generate_signs():
-    print("🖋️  Generating a new shown_signs")
-    # Example: pick from uppercase letters + digits
-    symbols = (
-            string.ascii_letters.replace('l', '').replace('I', '') +
-            string.digits +
-            "?![]@#$%&*()_+"
-        )
-    return ''.join(random.choices(symbols, k=C.SIGN_COUNT))
 
 class Player(BasePlayer):
     shown_signs     = models.StringField()
