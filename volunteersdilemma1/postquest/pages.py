@@ -3,7 +3,14 @@ from ._builtin import Page
 
 class Questionnaire1(Page):
     form_model = 'player'
-    form_fields = ['mpc1', 'mpc2', 'mpc3', 'mpc4', 'mpc5', 'mpc6', 'mpc7']
+    form_fields = ['mpc1', 'mpc2', 'mpc3', 'mpc4', 'mpc5', 'mpc6', 'mpc7', 'mpc8', 'mpc9']
+
+    def is_displayed(self):
+        assignment = self.participant.vars.get('group_assignment')
+        # Hide only when we're sure “control” is present
+        if assignment and "control" in str(assignment):
+            return False          # do NOT display
+        return True
     
     def vars_for_template(self):
         oppdict = {
@@ -20,7 +27,9 @@ class Questionnaire1(Page):
             "mpc4": f"I feel negatively about people with {oppdict[pet_choice]} preference.",
             "mpc5": "I believe the preference for cats/dogs reveals something meaningful about people.",
             "mpc6": f"As a {pet_choice} lover, I felt I had a high status within my 3-person group.",
-            "mpc7": f"As a {pet_choice} lover, I felt I had a low status within my 3-person group."
+            "mpc7": f"As a {pet_choice} lover, I felt I had a low status within my 3-person group.",
+            "mpc8": f"I would rather interact with someone who chose to do the task rather than skip it.",
+            "mpc9": f"I believe choosing to do the task would make cat/dog lovers have a good opinion about me."
         }
         return {"questions": questions}
 

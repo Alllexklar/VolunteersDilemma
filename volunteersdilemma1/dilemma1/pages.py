@@ -63,7 +63,7 @@ class MywaitingPage(Page):
 class GroupPage(Page):
 
     def vars_for_template(self):
-        print(self.player.group_assignment)
+        self.player.participant.vars["group_assignment"] = self.player.group_assignment
         if "control" in self.player.group_assignment:
             return {
             "self_image_src": 'dilemma1/images/blank.png',

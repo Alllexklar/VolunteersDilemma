@@ -71,6 +71,7 @@ class Subsession(BaseSubsession):
         The grouping data (counters, lists of groups, and ID trackers) are stored
         in Redis and updated atomically within a Redis lock.
         """
+        minority_condition_count = 75  # Number of players in minority condition before switching to control.
 
         # Compose unique Redis keys for grouping data and locking, based on session.pk.
         grouping_key = f"dilemma1:{self.session.code}:grouping_data"
@@ -107,7 +108,7 @@ class Subsession(BaseSubsession):
             if player.pet_choice == 'cat':
                 data['cat_count'] += 1
                 count = data['cat_count']
-                if count <= 75:
+                if count <= minority_condition_count:
                     # For cat players in pet-choice phase:
                     # Every first cat in a block of 3 => cat_minority; otherwise dog_minority.
                     condition = 'cat_minority' if (count % 3 == 1) else 'dog_minority'
@@ -116,7 +117,7 @@ class Subsession(BaseSubsession):
             elif player.pet_choice == 'dog':
                 data['dog_count'] += 1
                 count = data['dog_count']
-                if count <= 75:
+                if count <= minority_condition_count:
                     # For dog players in pet-choice phase:
                     # Every first dog in a block of 3 => dog_minority; otherwise cat_minority.
                     condition = 'dog_minority' if (count % 3 == 1) else 'cat_minority'

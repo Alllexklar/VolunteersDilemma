@@ -38,6 +38,8 @@ class Player(BasePlayer):
     mpc5 = models.IntegerField()
     mpc6 = models.IntegerField()
     mpc7 = models.IntegerField()
+    mpc8 = models.IntegerField()
+    mpc9 = models.IntegerField()
 
     # Sociotrophy questionnaire, 1-6 likert scale "strongly disagree" to "strongly agree"
     stq1 = models.IntegerField()
