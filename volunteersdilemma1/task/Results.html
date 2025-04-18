@@ -1,0 +1,21 @@
+{% extends "global/Page.html" %}
+{% load i18n static otree %}
+
+{% block title %}
+{{ player.correct }}
+{% endblock %}
+
+{% block content %}
+<div style="border: 2px solid blue; padding: 10px; max-width: 300px;">
+    <p>Original string: {{ player.shown_signs }}</p>
+    <p>Correct answer: {{ player.correct_answer }}</p>
+    <p>Your answer: {{ player.answer }}</p>
+  </div>
+  <br>
+    <p>
+        In total, you have now reversed {{ total_correct }} strings correctly! You need to complete {{ required_correct }} strings before you can proceed.
+    </p>
+    <form method="post">
+        <button type="submit" class="btn btn-primary">Next</button>
+    </form>
+{% endblock %}

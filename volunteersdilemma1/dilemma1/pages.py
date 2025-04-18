@@ -197,16 +197,23 @@ class DecisionPage(Page):
             participant.vars["skip"] = 0
 
 class TypingTask(Page):
+    form_model = "player"
+    form_fields = ["answer", "skip"]
+
+
     def is_displayed(self):
+        print(self.player.participant.vars["total_correct"] < self.player.participant.vars["required_correct"])
+        print(self.player.participant.vars['skip'] == 0)
+        print(self.player.volunteered == 1)
+
         return (
             self.player.participant.vars["total_correct"]
             < self.player.participant.vars["required_correct"]
             and self.player.participant.vars['skip'] == 0
-            and self.player.volunteered == 1 # if not volunteered, skip the task
+            #and self.player.volunteered == 1 # if not volunteered, skip the task
         ) 
 
-    form_model = "player"
-    form_fields = ["answer", "skip"]
+    
 
     def vars_for_template(self):
         new_signs = self.generate_signs(10)

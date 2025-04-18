@@ -7,10 +7,13 @@ load_dotenv()
 
 SESSION_CONFIGS = [
     dict(
-        name='dilemma1',
-        display_name="Dilemma 1",
+        name='exp1',
+        display_name="Exp1",
         num_demo_participants=250,
-        app_sequence=['dilemma1'],
+        app_sequence=[
+            #'dilemma1',
+            'task'
+            ],
     ),
 ]
 
@@ -33,7 +36,7 @@ SESSION_FIELDS = []
 LANGUAGE_CODE = 'en'
 
 # e.g. EUR, GBP, CNY, JPY
-REAL_WORLD_CURRENCY_CODE = 'EUR'
+REAL_WORLD_CURRENCY_CODE = 'GBP'
 USE_POINTS = True
 
 ADMIN_USERNAME = 'admin'
