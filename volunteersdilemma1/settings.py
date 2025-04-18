@@ -9,10 +9,11 @@ SESSION_CONFIGS = [
     dict(
         name='exp1',
         display_name="Exp1",
-        num_demo_participants=250,
+        num_demo_participants=20,
         app_sequence=[
-            #'dilemma1',
-            'task'
+            'dilemma1',
+            'task',
+            'postquest',
             ],
     ),
 ]

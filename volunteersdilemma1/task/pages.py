@@ -15,7 +15,9 @@ class TypingTask(Page):
         return (
             self.player.participant.vars["total_correct"] 
             < self.player.participant.vars["required_correct"] 
-            and self.player.participant.vars['skip'] == 0)
+            and self.player.participant.vars['skip'] == 0
+            and self.player.participant.vars.get('volunteered') == 1
+            )
 
     def vars_for_template(self):
         return dict(shown_signs=self.player.shown_signs)
@@ -40,14 +42,21 @@ class TypingTask(Page):
             self.player.correct = "Incorrect!"
 
 class Results(Page):
-    def is_displayed(player):
-        return player.participant.vars['skip'] == 0
+    def is_displayed(self):
+        return (
+            self.player.participant.vars['skip'] == 0
+            and self.player.participant.vars.get('volunteered') == 1
+            )
 
     def vars_for_template(player):
         required_correct = player.participant.vars["required_correct"]
         total_correct = player.participant.vars["total_correct"]
 
-        return {'total_correct': total_correct,'required_correct': required_correct}
+        return {
+                'total_correct': total_correct,
+                'required_correct': required_correct,
+                'correct': player.player.correct,
+            }
     
     def before_next_page(self):
         self.player.participant.vars["finished_task"] = 1
