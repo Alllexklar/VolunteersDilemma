@@ -11,14 +11,16 @@ class Questionnaire1(Page):
             'dog': 'cat'
         }
 
+        pet_choice = self.player.participant.vars.get('pet_choice')
+
         questions = {
-            "mpc1": f"As a {self.player.pet_choice} lover, I felt I was on my own within my 3-person group.",
+            "mpc1": f"As a {pet_choice} lover, I felt I was on my own within my 3-person group.",
             "mpc2": "I felt I had something in common with the 2 other members of my group.",
             "mpc3": "I feel positively about people with my animal preference.",
-            "mpc4": f"I feel negatively about people with {oppdict[self.player.pet_choice]} preference.",
+            "mpc4": f"I feel negatively about people with {oppdict[pet_choice]} preference.",
             "mpc5": "I believe the preference for cats/dogs reveals something meaningful about people.",
-            "mpc6": f"As a {self.player.pet_choice} lover, I felt I had a high status within my 3-person group.",
-            "mpc7": f"As a {self.player.pet_choice} lover, I felt I had a low status within my 3-person group."
+            "mpc6": f"As a {pet_choice} lover, I felt I had a high status within my 3-person group.",
+            "mpc7": f"As a {pet_choice} lover, I felt I had a low status within my 3-person group."
         }
         return {"questions": questions}
 

@@ -19,8 +19,10 @@ class AnimalChoice(Page):
     def before_next_page(self):
         if self.player.pet_balance < 200:
             self.player.pet_choice = 'cat'
+            self.player.participant.vars['pet_choice'] = 'cat'
         elif self.player.pet_balance > 200:
             self.player.pet_choice = 'dog'
+            self.player.participant.vars['pet_choice'] = 'dog'
         else:
             print("Error: pet_balance is 200. This should not happen.")
 
