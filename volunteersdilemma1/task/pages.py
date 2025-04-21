@@ -22,7 +22,7 @@ class TypingTask(Page):
     def is_displayed(self):
         if "total_correct" not in self.player.participant.vars:
             self.player.participant.vars["total_correct"] = 0
-            self.player.participant.vars["required_correct"] = 10
+            self.player.participant.vars["required_correct"] = C.REQUIRED_CORRECT
             self.player.participant.vars["finished_task"] = 0
             self.player.participant.vars["skip"] = 0
 
@@ -77,6 +77,15 @@ class Results(Page):
     
     def before_next_page(self):
         self.player.participant.vars["finished_task"] = 1
+
+    def app_after_this_page(self, upcoming_apps):
+        # your condition for stopping early
+        if self.player.participant.vars["total_correct"] == self.player.participant.vars["required_correct"] :
+            # mark that we’re skipping so later pages know
+            self.player.finished = 1
+            # upcoming_apps is a list of the remaining app names in order.
+            # returning the first item means “go to the very next app”.
+            return upcoming_apps[0]          # ← jump to next app
 
 page_sequence = [
     TypingTask, 

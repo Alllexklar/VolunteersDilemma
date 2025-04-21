@@ -254,7 +254,7 @@ class Player(BasePlayer):
         label="What would be the task, should you choose to execute it?",
         choices=[
             ["A", "Choosing animal preference"],
-            ["B", "Bachwards typing task"],
+            ["B", "Backwards typing task"],
             ["C", "Filling out a questionnaire"],
         ],
         widget=widgets.RadioSelect,
