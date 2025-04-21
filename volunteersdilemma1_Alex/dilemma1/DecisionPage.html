@@ -1,0 +1,63 @@
+{% extends "global/Page.html" %}
+{% load static %}
+
+{% block title %}
+Decision
+{% endblock %}
+
+{% block content %}
+    <p>{{ msg }} You can now choose to do the task or skip to the end questionnaire via the buttons below.</p>
+
+    <!-- Example image references -->
+    <div class="image-container">
+        <div class="top-image-container">
+            <figure>
+                <img src="{% static player_a_img_src %}" alt="Participant A">
+                <figcaption>Participant A</figcaption>
+              </figure>
+            <div class="line1"></div>
+            <figure>
+                <img src="{% static player_b_img_src %}" alt="Participant B">
+                <figcaption>Participant B</figcaption>
+            </figure>
+        </div>
+        <div class="bottom-image-container">
+            <div class="line2"></div>
+            <div class="cat-wrapper">
+                <form method="post">
+                    <button
+                        class="btn btn-primary volunteer-button"
+                        name="volunteered"
+                        value="1"
+                        type="submit"
+                    >
+                        Do the task
+                    </button>
+                    <button
+                        class="btn btn-primary skip-button"
+                        name="volunteered"
+                        value="0"
+                        type="submit"
+                    >
+                        Skip the task
+                    </button>
+                </form>
+                
+                <figure>
+                    <img src="{% static self_image_src %}" alt="Self Image" />
+                    <figcaption>You</figcaption>
+                </figure>
+            </div>
+            <div class="line3"></div>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block otree_content %}
+    <!-- By default, oTree includes a form for the Next button, etc. -->
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'dilemma1/Volunteering.css' %}">
+{% endblock %}

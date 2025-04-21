@@ -1,0 +1,21 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block styles  %}
+    <link href="{% static 'dilemma1/funfact.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <div class="animal-choice-container">
+        <h3>{{top_text}}</h3>
+        <br>
+        <img src="{% static img_src %}" alt="Animal Choice" class="animal-choice-image" />
+        <br>
+        <h4>{{fun_fact}}</h4>
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,81 @@
+.image-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.image-container figure{
+    display:flex;
+    flex-direction:column;
+    align-items:center;   /* centres caption under the image */
+    margin:0;             /* remove browser default margins */
+}
+
+.image-container figcaption{
+    margin-top:.5rem;     /* gap between image & text */
+    font-size:1.25rem;    /* make it bigger – tweak as you like */
+    font-weight:600;      /* a bit bolder for clarity */
+    text-align:center;    /* extra safety for multiline captions */
+}
+
+.image-container img {
+    height: 133px;
+}
+
+.top-image-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+.line1 {
+    width: 50%;
+    height: 2px;
+    background-color: black;
+}
+
+
+.bottom-image-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+}
+
+.cat-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.skip-button {
+    margin-top: 5px;
+    margin-bottom: 140px;
+}
+
+.line2 {
+    position: absolute;
+    top: 5%;
+    right: 50%;
+    transform: rotate(45deg);
+    transform-origin: left;
+    width: 40%;
+    height: 2px;
+    background-color: black;
+
+}
+
+.line3 {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: rotate(-45deg);
+    transform-origin: right;
+    width: 40%;
+    height: 2px;
+    background-color: black;
+}
