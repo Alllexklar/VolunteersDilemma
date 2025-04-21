@@ -4,8 +4,9 @@ class C(BaseConstants):
     NAME_IN_URL = 'typing_backwards'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 50
-    SIGN_COUNT = 3
-    REQUIRED_CORRECT = 3
+    SIGN_COUNT = 10
+    REQUIRED_CORRECT = 10
+
 class Subsession(BaseSubsession):
     pass
 
