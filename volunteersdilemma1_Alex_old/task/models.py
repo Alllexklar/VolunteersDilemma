@@ -6,6 +6,7 @@ class C(BaseConstants):
     NUM_ROUNDS = 50
     SIGN_COUNT = 10
     REQUIRED_CORRECT = 10
+
 class Subsession(BaseSubsession):
     pass
 

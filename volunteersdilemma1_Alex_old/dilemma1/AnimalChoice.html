@@ -1,0 +1,55 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles  %}
+    <link href="{% static 'dilemma1/animalchoice.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+    <h3>What do you prefer - cats or dogs? </h3>
+    <p>Select your preference on the scale below, depending on how strongly you feel.</p>
+    <p>Please click “Continue” button below when you have selected your preference.</p>
+    <div class="img-container">
+        <img src="{% static 'dilemma1/images/cat.png' %}" alt="Animal 1" class="animal-image" id="animal1">
+        <img src="{% static 'dilemma1/images/dog.png' %}" alt="Animal 2" class="animal-image" id="animal2">
+    </div>
+    <div class="slidecontainer">
+        <input type="range" name="pet_balance" min="100" max="300" value="200" class="slider" id="myRange">
+    </div>
+    <button type="submit" id="submit-btn" class="btn btn-primary">Continue</button>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select the outer form element. If it's the only one on the page, you can use document.querySelector.
+        const form = document.querySelector('form');
+        if (!form) {
+            console.error("No form element found.");
+            return;
+        }
+        
+        const slider = document.getElementById('myRange');
+        if (!slider) {
+            console.error("Slider element with id 'myRange' not found.");
+            return;
+        }
+
+        form.addEventListener('submit', function(event) {
+            // If the slider's value is 200, prevent submission.
+            if (Number(slider.value) === 200) {
+                event.preventDefault();
+                // Show an error message or handle as needed.
+                alert("Please adjust the slider; the default value is not allowed.");
+            }
+        });
+
+        slider.addEventListener('input', function() {
+            console.log("Current slider value:", slider.value);
+        });
+    });
+</script>
+{% endblock %}

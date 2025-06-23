@@ -3,7 +3,7 @@ from ._builtin import Page
 
 class Questionnaire1(Page):
     form_model = 'player'
-    form_fields = ['mpc1', 'mpc2', 'mpc3', 'mpc4', 'mpc5', 'mpc6', 'mpc7', 'mpc8', 'mpc9', 'mpc10', 'mpc11', 'mpc12']
+    form_fields = ['mpc1', 'mpc2', 'mpc3', 'mpc4', 'mpc5', 'mpc6', 'mpc7', 'mpc8', 'mpc9']
 
     def is_displayed(self):
         assignment = self.participant.vars.get('group_assignment')
@@ -29,10 +29,7 @@ class Questionnaire1(Page):
             "mpc6": f"As a {pet_choice} lover, I felt I had a high status within my 3-person group.",
             "mpc7": f"As a {pet_choice} lover, I felt I had a low status within my 3-person group.",
             "mpc8": f"I would rather interact with someone who chose to do the task rather than skip it.",
-            "mpc9": f"I believe choosing to do the task would make {oppdict[pet_choice]} lovers have a good opinion about me.",
-            "mpc10": f"I felt I was in the spotlight compared to the other 2 members of my group.",
-            "mpc11": f"I expected the {oppdict[pet_choice]} lover to volunteer.",
-            "mpc12": f"I believed my fellow group members expected me to volunteer.",
+            "mpc9": f"I believe choosing to do the task would make cat/dog lovers have a good opinion about me."
         }
         return {"questions": questions}
 
@@ -99,7 +96,7 @@ class Debrief(Page):
 class redirect(Page):
 
     def vars_for_template(self):
-        link = "https://app.prolific.com/submissions/complete?cc=CFBGYNZL"
+        link = "https://app.prolific.com/submissions/complete"
           
         return{'link': link}
     

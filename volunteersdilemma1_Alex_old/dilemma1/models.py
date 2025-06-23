@@ -71,7 +71,7 @@ class Subsession(BaseSubsession):
         The grouping data (counters, lists of groups, and ID trackers) are stored
         in Redis and updated atomically within a Redis lock.
         """
-        minority_condition_count = 5  # Number of players in minority condition before switching to control.
+        minority_condition_count = 75  # Number of players in minority condition before switching to control.
 
         # Compose unique Redis keys for grouping data and locking, based on session.pk.
         grouping_key = f"dilemma1:{self.session.code}:grouping_data"

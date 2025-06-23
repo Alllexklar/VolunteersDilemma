@@ -147,14 +147,6 @@ class DecisionPage(Page):
     form_fields = ['volunteered']
 
     def vars_for_template(self):
-        if "control" in self.player.group_assignment:
-            return {
-            "self_image_src": 'dilemma1/images/blank.png',
-            "player_a_img_src": 'dilemma1/images/blank.png',
-            "player_b_img_src": 'dilemma1/images/blank.png',
-            "msg": "You have been placed in a group two other participants",
-        }
-
         oppdict = {
             'cat': 'dog',
             'dog': 'cat'

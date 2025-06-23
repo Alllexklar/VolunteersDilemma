@@ -1,0 +1,20 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Please Wait
+{% endblock %}
+
+{% block content %}
+    <h3>Please wait while you are being assigned to a group...</h3>
+    <p>This page will automatically advance when ready.</p>
+{% endblock %}
+
+{% block otree_content %}
+<!-- This JavaScript auto-submits the form immediately when the page loads -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector('form').submit();
+});
+</script>
+{% endblock %}

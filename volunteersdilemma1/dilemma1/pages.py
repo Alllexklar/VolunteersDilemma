@@ -144,6 +144,9 @@ class DecisionPage(Page):
     form_fields = ['volunteered']
 
     def vars_for_template(self):
+        
+
+
         oppdict = {
             'cat': 'dog',
             'dog': 'cat'
